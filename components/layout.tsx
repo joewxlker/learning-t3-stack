@@ -1,15 +1,18 @@
-import React, { FC } from "react";
+import { ScriptProps } from "next/script";
+import React, { ButtonHTMLAttributes, FC, HtmlHTMLAttributes } from "react";
 import Footer from "./footer";
-import Header from "./header";
+import Header, { LinkProps, NavLinkProps } from "./header";
 
-interface LayoutProps {
+interface LayoutProps{
     children: JSX.Element;
+    onLinkClick: (text: string) => void; 
 }
 
-const Layout: FC<LayoutProps> = ({children}):JSX.Element  => {
+const Layout: FC<LayoutProps> = ({ children, onLinkClick }): JSX.Element => {
+
     return (
         <>
-        <Header/>
+            <Header onLinkClick={onLinkClick} />
         <div className=''>
             {children}
             </div>
