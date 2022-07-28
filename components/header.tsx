@@ -1,18 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { FC, FunctionComponent} from "react";
+import { ScriptProps } from "next/script";
+import React, { FC, FunctionComponent, useCallback} from "react";
 
-interface NavLinkProps {
+export interface NavLinkProps extends LinkProps {
     title: string;
     href: string;
 }
 
-const Header: FunctionComponent = ({ }): JSX.Element => {
+export interface LinkProps{
+    onLinkClick: (text: string) => void;
+}
+
+const Header: FunctionComponent<LinkProps> = ({ onLinkClick }): JSX.Element => {
     return (
         <div className='header-container'>
-            <NavLinks title={'SOLDIER'} href={'/main'} />
-            <NavLinks title={'WEAPONS'} href={'/projects'} />
-            <NavLinks title={'LOOT'} href={'/blog/blog'} />
+            <NavLinks title={'SOLDIER'} href={'/main'} onLinkClick={onLinkClick}  />
+            <NavLinks title={'WEAPONS'} href={'/projects'} onLinkClick={onLinkClick} />
+            <NavLinks title={'LOOT'} href={'/blog/blog'} onLinkClick={onLinkClick} />
             <style jsx>{`
         .header-container{
             position: fixed;
@@ -30,9 +35,13 @@ const Header: FunctionComponent = ({ }): JSX.Element => {
 export default Header;
 
 export const NavLinks: FC<NavLinkProps> = (props): JSX.Element => {
+
+    const handleClick = useCallback(() => {
+        props.onLinkClick(props.href);
+    },[props.onLinkClick])
     return (
         <>
-            <Link href={props.href}><a><h4>{props.title}</h4></a></Link>
+            <a onClick={handleClick}><h4>{props.title}</h4></a>
             <style jsx>{`
         a{
             display: block;
