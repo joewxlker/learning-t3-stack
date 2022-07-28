@@ -1,12 +1,15 @@
 import React, { FC } from "react";
-import { NavLinks } from "./header";
+import { LinkProps, NavLinks } from "./header";
 
 const Footer: FC = () => {
+    const handleClick = (props:string) => {
+        window.location.href = props
+    }
     return (
         <div className='main'>
-            <NavLinks title='github' href='/'></NavLinks> 
-            <NavLinks title='resume' href='/'></NavLinks> 
-            <NavLinks title='linkedin' href='/'></NavLinks> 
+            <NavLinks title='github' href='/' onLinkClick={handleClick}></NavLinks> 
+            <NavLinks title='resume' href='/' onLinkClick={handleClick}></NavLinks> 
+            <NavLinks title='linkedin' href='/' onLinkClick={handleClick}></NavLinks> 
 
             <style jsx>
                 {`
