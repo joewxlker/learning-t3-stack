@@ -2,8 +2,10 @@ import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head';
 import { FC, useEffect, useState } from 'react';
 import CodeWars, { CodeWarsData } from '../components/code-wars';
+import EmblemMenu from '../components/emblems';
 import { GithubAccountData, GithubSubscribe, IdCard } from '../components/github-id';
 import Layout from '../components/layout'
+import { useHandleSetBool } from '../hooks/setBooleanValues';
 
 export interface MainProps {
     githubAccountData: GithubAccountData | null;
@@ -29,6 +31,8 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
 
     const [innerWidthProp, setInnerWidthProp] = useState<number>();
     const [brighteness, setBrightness] = useState<number>(6);
+    const [bool, setBool] = useHandleSetBool('');
+    const [activeEmblem, setActiveEmblem] = useState<string>('/images/propaganda.png');
 
     const updateWidth = () => setInnerWidthProp(window.innerWidth)
             useEffect(() => {
@@ -45,6 +49,12 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
         //this scrolls the page to the value defined in the child component
     }
 
+    useEffect(() => {
+    }, [activeEmblem])
+    const handleEmblemMenuBool = () => {
+        setBool('openEmblemMenu')
+    }
+
 
     return (
         <>
@@ -53,6 +63,7 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
             </Head>
             <Layout onLinkClick={handleLinkClick} innerWidthProp={innerWidthProp}>
                 <>
+                    {bool['openEmblemMenu'] && <EmblemMenu onEmblemChange={value => { console.log(activeEmblem); setActiveEmblem(value)}} bool={bool['openEmblemMenu']} onCloseMenu={ e => setBool('openEmblemMenu')} />}
                     <span className='video-container'>
                     <video className='video' loop autoPlay={true} muted src="mp4/soldierbkg.mp4"
                         style={{
@@ -70,7 +81,10 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                         </span>
                     <div className='user-data-container'>
                         {/** Components go here */}
-                        <IdCard githubAccountData={githubAccountData} githubSubscribe={githubSubscribe} />
+                        <IdCard githubAccountData={githubAccountData}
+                            githubSubscribe={githubSubscribe}
+                            onOpenEmblemMenu={handleEmblemMenuBool}
+                            activeEmblem={activeEmblem} />
                         <CodeWars data={codeWarsData} />
                     </div>
                     <div className='main-menu-container'>
@@ -159,6 +173,25 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
           box-sizing: border-box;
         }
 
+        p{
+            padding: 0%;
+            margin: 0.2rem;
+        }
+
+        h1{
+            color: rgba(255,255,255,0.8);
+            text-shadow: 1px 1px 4rem white;
+            margin: 0;
+        }
+
+        h3{
+            color: white;
+            margin: 0.2rem;
+        }
+        h4{
+            color: white;
+            margin: 0.2rem;
+        }
         @keyframes fade {
             from {opactiy: 0%}
             to {opacity: 100%}
