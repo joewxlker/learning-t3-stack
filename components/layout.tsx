@@ -1,24 +1,24 @@
-import { ScriptProps } from "next/script";
-import React, { ButtonHTMLAttributes, FC, HtmlHTMLAttributes } from "react";
+import React, {FC} from "react";
 import Footer from "./footer";
-import Header, { LinkProps, NavLinkProps } from "./header";
+import Header from "./header";
 
-interface LayoutProps{
+interface LayoutProps {
     children: JSX.Element;
-    onLinkClick: (text: string) => void; 
+    innerWidthProp: number;
+    onLinkClick: (text:number) => void;
 }
 
-const Layout: FC<LayoutProps> = ({ children, onLinkClick }): JSX.Element => {
+const Layout: FC<LayoutProps> = ({ children, onLinkClick, innerWidthProp }): JSX.Element => {
 
     return (
         <>
-            <Header onLinkClick={onLinkClick} />
-        <div className=''>
-            {children}
+            <Header onLinkClick={onLinkClick} innerWidthProp={innerWidthProp} />
+            <div className=''>
+                {children}
             </div>
-        <Footer/>
+            <Footer />
         </>
-     );
+    );
 }
 
 export default Layout;
