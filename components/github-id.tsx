@@ -1,10 +1,7 @@
 import Image from "next/image";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
+import { useHandleSetBool } from "../hooks/setBooleanValues";
 import { useSetCount } from "../hooks/setCounter";
-
-interface Bool {
-    githubData: boolean;
-}
 
 export interface GithubAccountData {
     login: string;
@@ -24,20 +21,22 @@ export interface GithubSubscribe {
 }
 
 export interface GithubProps {
+    onOpenEmblemMenu: () => void;
     githubAccountData: GithubAccountData | null;
     githubSubscribe: GithubSubscribe | null;
+    activeEmblem: string;
 }
 
-export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe }): JSX.Element => {
+export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, onOpenEmblemMenu, activeEmblem }): JSX.Element => {
     
     const [count, setCount] = useSetCount();
     const [loading, setLoading] = useState(true);
-    const [bool, setBool] = useState<Bool>({ githubData: true });
+    const [bool, setBool] = useHandleSetBool('');
     
     useEffect(() => {
         setCount('iterateRepoValues', 1)
         if (githubAccountData === null) return
-        setBool({ ...bool, ['githubData']: false })
+        setBool('githubData')
         getCommitData();
     }, [])
     
@@ -50,6 +49,12 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe }):
         }, 8000)
         return () => clearInterval(interval)
     }, [count])
+
+
+    const openEmblemMenu = useCallback(() => {
+        console.log('opening menu')
+        return onOpenEmblemMenu();
+    }, [])
 
     const iterateData = async (greaterThan: string | number, target: string) => {
         if (count[target] < greaterThan) return setCount(target, (count[target] + 1));
@@ -74,8 +79,14 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe }):
     return (
         <>
             <div className='main'>
-                <span className='main-span'>
-                    <Image src='/images/propaganda.png' height={10} width={140} />
+                {bool['hover'] && <div className='edit-image-container'><div onMouseLeave={e => setBool('hover')} onClick={openEmblemMenu} className='edit-image'>
+                        <h1>!</h1>
+                    </div></div>}
+                <span className='main-span' >
+                    <span id={`${bool['hover']}`} className='emblem-container'>
+                        {activeEmblem === undefined && <Image src={''} height={100} width={110} onMouseOver={e => setBool('hover')} />}
+                        {activeEmblem !== undefined &&<Image src={`${activeEmblem}`}   height={100} width={110} onMouseOver={e => setBool('hover')} />}
+                    </span>
                     <span className='id-span'>
                         <h3>[jw]{githubAccountData !== null ? githubAccountData.login : 'Joseph Walker'}</h3>
                         <div className='slider-container'>
@@ -97,7 +108,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe }):
                 </span>
                 {bool['githubData'] && <div className='alert-rate-limit'>
                     <span className='hide-alert' ><h4>you have been rate limited by github. Data from github will not show</h4><button
-                        onClick={e => { e.preventDefault(); setBool({ ...bool, ['githubData']: false }) }} className='alert-button'>X</button></span>
+                        onClick={e => setBool('githubData')} className='alert-button'>X</button></span>
                 </div>}
                 {loading && !bool['githubData'] && <span><h4>Github Pending...</h4><div className='spinner'></div></span>}
                 <>
@@ -119,6 +130,35 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe }):
 
             </div>
             <style jsx>{`
+
+            .emblem-container{
+                height: 95%;
+                width: 20%;
+            }
+
+            .edit-image-container{
+                height: 0rem;
+            }
+
+            #true{
+                filter: blur(3px);
+                animation: slowblur 0.5s;
+            }
+
+            .edit-image{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transform: translate(0.5rem, 0.6rem);
+                z-index: 2;
+                position: relative;
+                height: 5.5rem;
+                width: 5.8rem;
+                cursor: pointer;
+                background-color: rgba( 0,0,0, 0.3);
+                animation: fade 1s;
+            }
+
             span{
                 margin: 0.3rem;
             }
@@ -179,10 +219,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe }):
                 padding: 10%:
                 margin: 0%;
             }
-            p{
-                padding: 0%;
-                margin: 0.2rem;
-            }
+
             .todo:hover{
                 display: flex;
                 flex-direction: row;
@@ -190,19 +227,8 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe }):
                 color: white;
                 cursor: pointer;
             }
-            h1{
-                color: rgba(255,255,255,0.8);
-                text-shadow: 1px 1px 4rem white;
-                margin: 0;
-            }
-            h3{
-                color: white;
-                margin: 0.2rem;
-            }
-            h4{
-                color: white;
-                margin: 0.2rem;
-            }
+
+
             .slider-container{
                 width: 100%;
                 height: 0.6rem;
@@ -294,6 +320,11 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe }):
             to {
                 transform: rotate(360deg)
             }
+        }
+
+        @keyframes slowblur {
+            from{filter: blur(0)}
+            to{filter: blur(3px)}
         }
 
         `}</style>
