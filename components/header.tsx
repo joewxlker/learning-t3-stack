@@ -1,31 +1,62 @@
-import Image from "next/image";
-import Link from "next/link";
-import { ScriptProps } from "next/script";
-import React, { FC, FunctionComponent, useCallback} from "react";
+import React, { Dispatch, FC, FunctionComponent, SetStateAction, useCallback, useEffect, useState} from "react";
 
-export interface NavLinkProps extends LinkProps {
+export interface NavLinkProps extends HeaderProps {
     title: string;
-    href: string;
+    innerWidthProp: number;
+    setActiveLink: Dispatch<SetStateAction<string>>;
+    activeLink: string;
+    theme: string;
 }
 
-export interface LinkProps{
-    onLinkClick: (text: string) => void;
+export interface HeaderProps{
+    innerWidthProp: number;
+    onLinkClick: (text: number) => void;
 }
 
-const Header: FunctionComponent<LinkProps> = ({ onLinkClick }): JSX.Element => {
+const Header: FunctionComponent<HeaderProps> = ({ onLinkClick, innerWidthProp }): JSX.Element => {
+
+    const [isActive, setActive] = useState<string>('PLAY');
+
     return (
         <div className='header-container'>
-            <NavLinks title={'SOLDIER'} href={'/main'} onLinkClick={onLinkClick}  />
-            <NavLinks title={'WEAPONS'} href={'/projects'} onLinkClick={onLinkClick} />
-            <NavLinks title={'LOOT'} href={'/blog/blog'} onLinkClick={onLinkClick} />
+            <NavLinks
+                title={'PLAY'}
+                innerWidthProp={0}
+                onLinkClick={onLinkClick}
+                setActiveLink={setActive}
+                activeLink={isActive}
+                theme={''} />
+            <NavLinks
+                title={'WEAPONS'}
+                innerWidthProp={innerWidthProp}
+                onLinkClick={onLinkClick}
+                setActiveLink={setActive}
+                activeLink={isActive}
+                theme={''}/>
+            <NavLinks
+                title={'STORE'}
+                innerWidthProp={(innerWidthProp) * 2}
+                onLinkClick={onLinkClick}
+                setActiveLink={setActive}
+                activeLink={isActive}
+                theme={'shop'}/>
+                        <NavLinks
+                title={'SETTINGS'}
+                innerWidthProp={(innerWidthProp) * 3}
+                onLinkClick={onLinkClick}
+                setActiveLink={setActive}
+                activeLink={isActive}
+                theme={''}/>
             <style jsx>{`
         .header-container{
             position: fixed;
+            height: 5rem;
             width: 100vw;
             display: flex;
             flex-direction: row;
             justify-content: space-evenly;
-            background-color: rgba(100,100,100, .2);
+            align-items: flex-end;
+            background-color: rgba(255,255,255, .1);
             z-index: 2;
         }
         `}</style>
@@ -34,25 +65,96 @@ const Header: FunctionComponent<LinkProps> = ({ onLinkClick }): JSX.Element => {
 }
 export default Header;
 
-export const NavLinks: FC<NavLinkProps> = (props): JSX.Element => {
+export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, setActiveLink, activeLink, theme}): JSX.Element => {
 
     const handleClick = useCallback(() => {
-        props.onLinkClick(props.href);
-    },[props.onLinkClick])
+        onLinkClick(innerWidthProp);
+        setActiveLink(title);
+    }, [onLinkClick])
+    
     return (
         <>
-            <a onClick={handleClick}><h4>{props.title}</h4></a>
+        {activeLink === title && theme === '' && <span className='link-span' onClick={handleClick}><a className='active' ><h4>{title}</h4></a><div id='expand'/></span>}
+            {activeLink !== title && theme === '' && <span className='' onClick={handleClick}><a className='' ><h4>{title}</h4></a><div id='expand'/></span>}
+            {activeLink === title && theme !== '' && <span className={`${theme}-active`} onClick={handleClick}><a className='active' ><h4>{title}</h4></a></span>}
+            {activeLink !== title && theme !== '' && <span className={theme} onClick={handleClick}><a className='' ><h4>{title}</h4></a></span>}
             <style jsx>{`
+        span{
+            cursor: pointer;
+            border-bottom: solid rgba(255,255,255,0.5) 1px;
+        }
+        span.shop:hover a{
+            color: black;
+        }
+        span.shop:hover {
+            background-color: rgba(210,150,50, 0.9);
+        }
+        span.shop {
+            background-color: rgba(210,150,50, 0.7);
+            animation: shopfade 0.5s reverse;
+        }
+        span.shop-active {
+            background-color: rgba(210,150,50, 1);
+            box-shadow: inset 0 1rem 2rem 0.1rem rgba(255,255,255,0.2);
+            animation: shopfade 0.5s;
+        }
+
+
+        #expand{
+            position: relative;
+            transform: translateY(-5px);
+            height: 0.7rem;
+            width: 0.7rem;
+            background-color: rgba(100, 200, 10, 0.6);
+        }
+        span.link-span{
+            background-image: linear-gradient( rgba(100,100,100, 0), rgba(200,100,10, 0.3));
+            animation: fadein 0.5s ease-in;
+        }
+        span{
+            background-image: linear-gradient(rgba(100,100,100, 0), rgba(10,10,10, 0.3));
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items:center;
+            height: 3.5rem;
+            width: 20rem;
+            background-color: rgba(100,100,100, 0)
+        }
+        .active{
+            color: orange;
+        }
         a{
             display: block;
             text-decoration-line: none;
-            color: white;
+            color: rgba(255,255,255,0.5);
             font-size: large;
             padding: 0px 0.3rem;
         }
-        a:hover{
+        span:hover a{
             color: orange;
         }
+
+        @keyframes fadein{
+            from {
+                opacity: 0%;
+            }
+            to {
+                opacity: 100%;
+            }
+        }
+
+        @keyframes shopfade {
+            from {
+                background-color: rgba(210,150,50, 0.7);
+                
+            }
+            to {
+                background-color: rgba(210,150,50, 1);
+                box-shadow: inset 0 1rem 2rem 0.1rem rgba(255,255,255,0.2);
+            }
+        }
+
         `}</style>
         </>
     )
