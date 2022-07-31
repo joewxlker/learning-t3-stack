@@ -93,7 +93,9 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                     
                     <div className='overlay' style={{ backgroundColor: `rgba(0,0,0, 0.5)` }}>
                     <div className='overlay' style={{ backgroundColor: `rgba(255,255,255, 0.0${brighteness})` }}></div>
-                        <Second />
+                        <Weapons />
+                        <Store />
+                        <Settings />
                         </div>
                     </>
             </Layout>
@@ -275,15 +277,15 @@ export const MainMenu: FC = () => {
     )
 }
 
-export const Second: FC = ({ }): JSX.Element => {
+export const Weapons: FC = ({ }): JSX.Element => {
     return ( 
         <>
-            <div className='second'>
+            <div className='weapons'>
                 <MainMenu></MainMenu>
             </div>
             <style jsx>
                 {`
-                .second{
+                .weapons{
                     top: 10vh;
                     height: 90vh;
                     width: 100vw;
@@ -294,3 +296,43 @@ export const Second: FC = ({ }): JSX.Element => {
             </>
     )
 }
+
+export const Store: FC = ({ }): JSX.Element => {
+    return ( 
+        <>
+            <div className='store'>
+            </div>
+            <style jsx>
+                {`
+                .store{
+                    top: 10vh;
+                    height: 90vh;
+                    width: 100vw;
+                    position: absolute;
+                    transform: translateX(200vw);
+                }`}
+            </style>
+            </>
+    )
+}
+
+export const Settings: FC = ({ }): JSX.Element => {
+    return ( 
+        <>
+            <div className='settings'>
+                <h1>hello</h1>
+            </div>
+            <style jsx>
+                {`
+                .settings{
+                    top: 10vh;
+                    height: 90vh;
+                    width: 100vw;
+                    position: absolute;
+                    transform: translateX(300vw);
+                }`}
+            </style>
+            </>
+    )
+}
+
