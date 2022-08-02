@@ -1,4 +1,3 @@
-import { GetServerSideProps } from 'next';
 import Head from 'next/head'
 import Image from 'next/image';
 import { useState } from 'react';
@@ -29,7 +28,7 @@ export default function Home():JSX.Element {
 
         </div>
         
-        <Image className='background-image' src='/images/loadingscreenone.jpg' alt='' layout='fill'></Image>
+        <Image className='background-image' src='/images/cyborg.jpeg' alt='' layout='fill'></Image>
       
         <style jsx>{`
 
