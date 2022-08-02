@@ -1,6 +1,5 @@
-import { getImageSize } from "next/dist/server/image-optimizer";
 import Image from "next/image"
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
 interface StoreImagePropsOne {
     sourceTop: string;
@@ -72,6 +71,7 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                 {`
 
                 .links-container{
+                    box-shadow: 0.5rem 0.5rem 0.8rem 0.2rem rgba(0,0,0,0.5);
                     position: absolute;
                     z-index: 6;
                     left: 30vw;
@@ -123,7 +123,7 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                 }
                 .image-wrapper{
                     margin: 0.3rem;
-                    box-shadow: 0 0 100rem 0.1rem rgba(255,255,255,0.5);
+                    box-shadow: 0.5rem 0.5rem 0.8rem 0.2rem rgba(0,0,0,0.5);
                 }
                 .info-container h2{
                     color: white;
@@ -183,7 +183,7 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                             width: 100%;
                             display: flex;
                             flex-direction: row;
-                            margin-bottom: 8rem;
+                            margin-bottom: 4rem;
                         }
                         `}
             </style>
@@ -191,36 +191,93 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
     )
 }
 
+interface StoreImageObjTwo {
+    image: string;
+    href: string;
+}
 interface StoreImagePropsTwo {
-    images: Array<string>;
+    data: Array<StoreImageObjTwo>;
 }
 
-export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({images}): JSX.Element => {
+export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element => {
     
     const [active, setActive] = useState('');
     const [hover, setHover] = useState<boolean>()
+    useEffect(() => {
+        console.log(active,hover,data[0].image)
+    }, [active, hover])
     
     return (
         <>
-            <div className='store-item'>
-                {images.map((sauce) => {
+            <div className='store-item' id='main'>
+                {data.map(({image, href}) => {
                     return (
-                    <span className='image-wrapper'>
-                    <Image src={sauce} width={470} height={300} />
-                    </span>
+                        <>
+                            {hover && active === image && <div className={`links-wrapper`}
+                                onClick={e => window.open(href)}>
+                                <div
+                                className={`links-container`}
+                                onMouseEnter={e => {setHover(true); setActive(image)}}>
+                                <h2>View Project</h2></div>
+                            </div>}
+                            <div
+                                id={active === image? `blur-${hover}` : ''}
+                                className='image-wrapper'
+                                onClick={e => window.open(href)}
+                                onMouseEnter={e => { setHover(true);  setActive(image)}}
+                                onMouseLeave={e => setHover(false)}>
+                                <Image
+                                    src={image}
+                                    width={470}
+                                    height={300} />
+                    </div>
+                    </>
                     )})}
             </div>
 
             <style jsx>
 
                 {`
-                .image-wrapper{
-                    margin: 1rem;
+
+                #blur-true{
+                    filter: blur(3px);
                 }
 
+                .links-wrapper{
+                    width: 0px;
+                    cursor:pointer;
+                }
+
+                .links-container{
+                    cursor:pointer;
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    width: 23vw;
+                    height: 10vh;
+                    top: 100px;
+                    left: 30px;
+                    background: orange;
+                    z-index: 10;
+                }
+                .image-wrapper{
+                    cursor:pointer;
+                    display:flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: fit-content;
+                    margin: 1rem;
+                    box-shadow: 0.5rem 0.5rem 0.8rem 0.2rem rgba(0,0,0,0.5);
+                }
                 .store-item{
+                    background-image: linear-gradient(rgba(0,0,0, 0), rgba(40,40,40, 0.8));
                     width: 85%;
-                    margin-bottom: 10rem;
+                    margin-bottom: 7rem;
+                    display: flex;
+                    flex--direction:row;
+                    box-shadow: -0rem 4rem 3rem 0.6rem rgba(40,40,40,0.8);
                 }
                         `}
             </style>
