@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { FC, useCallback, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from "react";
 import { useHandleSetBool } from "../hooks/setBooleanValues";
-import { useSetCount } from "../hooks/setCounter";
+import { useIncrementData } from "../hooks/setCounter";
+import { isNull, isUndefined } from "../pages/main";
 
 export interface GithubAccountData {
     login: string;
@@ -21,7 +22,7 @@ export interface GithubSubscribe {
 }
 
 export interface GithubProps {
-    onOpenEmblemMenu: () => void;
+    onOpenEmblemMenu: (e: string) => Dispatch<SetStateAction<object>>;
     githubAccountData: GithubAccountData | null;
     githubSubscribe: GithubSubscribe | null;
     activeEmblem: string;
@@ -29,45 +30,38 @@ export interface GithubProps {
 
 export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, onOpenEmblemMenu, activeEmblem }): JSX.Element => {
     
-    const [count, setCount] = useSetCount();
+    const [count, setCount, setIncrement] = useIncrementData();
     const [loading, setLoading] = useState(true);
-    const [bool, setBool] = useHandleSetBool('');
+    const [bool, setBool] = useHandleSetBool();
     
     useEffect(() => {
         setCount('iterateRepoValues', 1)
-        if (githubAccountData === null) return
+        if (!isNull(githubAccountData)) return;
         setBool('githubData')
-        getCommitData();
+        getCommitData(githubAccountData,githubSubscribe);
     }, [])
     
     useEffect(() => {
         const interval = setInterval(() => {
-            if (githubAccountData === null) return
-            iterateData(githubAccountData.public_repos - 1, 'iterateRepoValues');
-            getCommitData();
-            iterateData(2, 'iteratePValues');
+            if (!isNull(githubAccountData)) return;
+            setIncrement((githubAccountData.public_repos - 1), 'iterateRepoValues', true);
+            getCommitData(githubAccountData,githubSubscribe);
+           setIncrement(2, 'iteratePValues', true);
         }, 8000)
         return () => clearInterval(interval)
-    }, [count])
+    }, [count,setCount])
 
 
     const openEmblemMenu = useCallback(() => {
-        console.log('opening menu')
-        return onOpenEmblemMenu();
+        return onOpenEmblemMenu('openEmblemMenu');
     }, [])
 
-    const iterateData = async (greaterThan: string | number, target: string) => {
-        if (count[target] < greaterThan) return setCount(target, (count[target] + 1));
-        else return setCount(target, 0)
-    };
-
-    const getCommitData = async () => {
-        if (githubAccountData === null || githubAccountData === undefined) return setLoading(false)
-        if (githubSubscribe === null || githubSubscribe === undefined) return setLoading(false)
-        const res = await fetch(`https://api.github.com/repos/riectivnoodes/${githubSubscribe[count['iterateRepoValues'] !== undefined ? count['iterateRepoValues'] : 0].name}/commits`);
-        const data = await res.json();
-        setCount('repos', data.length);
-        setLoading(false)
+    const getCommitData = async (data: object | null | undefined, subs: object | null | undefined) => {
+        const arr = [data, subs];
+        for (let v in arr) { if (!isNull(arr[v]) || !isUndefined(arr[v])) return setLoading(false)}
+        const res = await fetch(`https://api.github.com/repos/riectivnoodes/${subs[count['iterateRepoValues'] !== undefined ? count['iterateRepoValues'] : 0].name}/commits`);
+        const updateData = await res.json();
+        return [setCount('repos', updateData.length),setLoading(false)]
     }
     const idPText = [
         `Current repos ${githubAccountData !== null ? githubAccountData.public_repos : null} ...`,
