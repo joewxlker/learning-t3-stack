@@ -1,8 +1,7 @@
-import { GetServerSideProps, GetStaticProps, NextPage } from 'next'
+import { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head';
 import Image from 'next/image';
-import { StringifyOptions } from 'querystring';
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import CodeWars, { CodeWarsData } from '../components/code-wars';
 import EmblemMenu from '../components/emblems';
 import { GithubAccountData, GithubSubscribe, IdCard } from '../components/github-id';
@@ -63,19 +62,6 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                 <>
                     {bool['openEmblemMenu'] && <EmblemMenu onEmblemChange={value => { console.log(activeEmblem); setActiveEmblem(value)}} bool={bool['openEmblemMenu']} onCloseMenu={ e => setBool('openEmblemMenu')} />}
                     <span className='video-container'>
-                    <video className='video' loop autoPlay={true} muted src="mp4/soldierbkg.mp4"
-                        style={{
-                            height: '100vh',
-                            width: '110vw',
-                            objectFit: 'fill',
-                            display: 'absolute',
-                            position: 'absolute',
-                            top: 0, zIndex: -1,
-                            transform:'translateX(-100px)',
-
-                    }} >
-                    Your browser does not support the video tag.
-                        </video>
                         </span>
                     <div className='user-data-container'>
                         {/** Components go here */}
@@ -105,6 +91,10 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                 .video-container{
                     position: fixed;
                     z-index: -2;
+                    height: 100vh;
+                    width: 100vw;
+                    background-size: cover;
+                    background-image: url('/images/cyborg.jpeg');
                 }
                 .overlay{
                     display: absolute;
@@ -352,6 +342,7 @@ export const Store: FC = (): JSX.Element => {
             <div className='store'>
                 <div className='store-wrapper'>
                     <div className='store-container'>
+                        <h1>PROJECTS</h1>
                         <StoreModuleOne
                             sourceMain={storeOneArr[count['shopSlider']].sourceMain}
                             sourceBottom={storeOneArr[count['shopSlider']].sourceBottom}
@@ -362,19 +353,31 @@ export const Store: FC = (): JSX.Element => {
                             href={storeOneArr[count['shopSlider']].href}
                             madeWith={storeOneArr[count['shopSlider']].madeWith}
                             onNextPrev={setIncrement} />
-                        <StoreModuleTwo images={['/images/redfoxinuss.png','/mp4/retralink.gif','/images/beautyshop-one.png']}/>
+                        <StoreModuleTwo data={[{image: '/images/redfoxinuss.png', href: '', },
+                            { image: '/mp4/retralink.gif', href: '' },
+                            { image: '/images/beautyshop-one.png', href: ''}]} />
                     </div>
-
+                    <div className='cyborg-image-wrapper'><Image src='/images/cyborg-crouch.png' width={400} height={600} /></div>
                 </div>
+                
             </div>
+            
             <style jsx>
                 {`
+
+            .cyborg-image-wrapper{
+                position: absolute;
+                top: 70vh;
+                right: -3vw;
+                z-index:6;
+                background-image: linear-gradient(rgba(0,0,0, 0), rgba(40,40,40, 0.8), rgba(0,0,0, 0));
+            }
+
         .store-container{
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 3rem;
         }
         .store-wrapper{
             height: 80vh;
