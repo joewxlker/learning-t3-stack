@@ -7,11 +7,9 @@ export interface Bool {
     setBool: Dispatch<SetStateAction<object>>;
 }
 
-export const useHandleSetBool = (target: string) => {
-    
+export const useHandleSetBool = () => {
     const [bool, setBool] = useState<any>({ githubData: true, hover: false, openEmblemMenu: false });
-    
     return [bool, (target: string) => {
-        if (bool[target]) { setBool((prev) => { return { ...prev, [target]: false } }) }
-    else { setBool((prev) => {return { ...prev, [target]: true }})}}]
+        if (bool[target]) { setBool((prev: object) => { return { ...prev, [target]: false } }) }
+    else { setBool((prev: object) => {return { ...prev, [target]: true }})}}]
 }
