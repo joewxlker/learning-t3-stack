@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, MouseEvent, useCallback, useEffect, useState } from "react";
 import { Bool } from "../hooks/setBooleanValues";
 
 export interface EmblemMenuProps {
@@ -7,33 +7,47 @@ export interface EmblemMenuProps {
     onCloseMenu: (e: any) => void;
     onEmblemChange: (value: string) => void;
 }
+
 const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) => {
 
     const [emblemType, setEmblemType] = useState<number>(0);
     const [queryEmblem, setQueryEmblem] = useState<string>('')
     const [mousePositionX, setMousePositionX] = useState(0);
     const [mousePositionY, setMousePositionY] = useState(0);
+    
+    const source = [
+        '/images/react-2.svg',
+        '/images/Node.svg',
+        '/images/expressjs-icon.svg',
+        '/images/mongodb.svg',
+        '/images/SendGrid.svg',
+        '/images/stripe-ar21.svg',
+        '/images/Bootstrap.svg',
+        '/images/Solidity-Logo.wine.svg'
+    ]
 
     const emblems = [
-        { source: '/images/Bootstrap.svg', description: 'Unlocked', type: 0 },
-        { source: '/images/Node.svg', description: 'Unlocked', type: 1 },
-        { source: '/images/Solidity-Logo.wine.svg', description: 'Unlocked', type: 2 },
+        { source: source[0], description: 'REACT', type: 0 },
+        { source: source[1], description: 'NODEJS', type: 1 },
+        { source: source[2], description: 'EXPRESS', type: 1 },
+        { source: source[3], description: 'MONGODB', type: 1 },
+        { source: source[4], description: 'SENDGRID', type: 2 },
+        { source: source[5], description: 'STRIPE', type: 2 },
+        { source: source[6], description: 'BOOTSTRAP', type: 0 },
+        { source: source[7], description: 'SOLIDITY', type: 2 },
     ]
 
     useEffect(() => {
-        
         window.addEventListener('mousemove', (e) => {
             setMousePositionX(e.clientX);
             setMousePositionY(e.clientY)})
     },[mousePositionY, setMousePositionY,mousePositionX, setMousePositionX,queryEmblem, setQueryEmblem])
 
-
-    const closeMenu = useCallback((e) => {
+    const closeMenu = useCallback((e: MouseEvent) => {
         onCloseMenu(e);
     }, [])
 
     const changeEmblem = useCallback((value: string) => {
-        console.log(value)
         onEmblemChange(value);
     }, [])
 
@@ -60,7 +74,7 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
                                     </>
                                 )
                         })}
-                        {queryEmblem !== '' && <div className='inspect-emblem' style={{left: mousePositionX-200, top: mousePositionY-200}}>{queryEmblem}</div>}
+                        {queryEmblem !== '' && <div className='inspect-emblem' style={{left: mousePositionX-200, top: mousePositionY-200}}><h2>{queryEmblem}</h2></div>}
                         </div>
                 </div>
                 
@@ -70,15 +84,19 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
                 {`
                 
                 .inspect-emblem{
+                    color: white;
+                    display: flex;
+                    align-items: center;
                     width: 10rem;
                     position: absolute;
-                    height: 3rem;
+                    height: 2.5rem;
                     bottom: 0px;
                     background-color: rgba(255,255,255,0.4);
                     z-index: 100;
                 }
 
                 .emblem-button{
+                    margin: 0.7rem;
                     background-color: rgba(0,0,0,0);
                     border: none;
                 }
