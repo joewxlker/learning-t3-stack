@@ -87,16 +87,16 @@ export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, 
             color: black;
         }
         span.shop:hover {
-            background-image:linear-gradient(rgba(5,240,0,0.3),rgba(255,170,0,1));
+            background-color: orange;
         }
         span.shop {
             opacity: 80%;
-            background-image:linear-gradient(rgba(5,240,0,0.3),rgba(255,170,0,1));
+            background-color: orange;
             animation: shopfade 0.5s reverse;
         }
         span.shop-active {
             opacity: 100%;
-            background-image:linear-gradient(rgba(5,240,0,0.3),rgba(255,170,0,1));
+            background-color: orange;
             box-shadow: inset 0 1rem 2rem 0.1rem rgba(255,255,255,0.2);
             animation: shopfade 0.5s;
         }

@@ -34,17 +34,18 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
 
                 <div className='main-image-overlay'><div className='hover-image' onMouseEnter={e => setHover(true)} onMouseLeave={e => setHover(false)}>
                 </div></div>
+                {hover && <span className='links-container' onMouseEnter={e => setHover(true)}><h1>VIEW CODE</h1></span>}
                 <div className='images-container' >
                     <div id={`blur-${hover}`} className='image-wrapper'>
+                        
                         <Image className='image' src={active} width={1200} height={630} />
                         <div className='built-with-wrapper'>
-                        {hover && <div className='built-with'><h1>VIEW CODE</h1></div>}
-                            {!hover && <div className="built-with">
+                            <div className="built-with">
                             
                         {madeWith.map((source) => { return (
                             <Image src={source} width={70} height={70} />
                             )})}
-                            </div>}
+                            </div>
                             </div>
                         </div>
                         
@@ -70,6 +71,21 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
 
                 {`
 
+                .links-container{
+                    position: absolute;
+                    z-index: 6;
+                    left: 30vw;
+                    width: 20vw;
+                    height: 10vh;
+                    top: 40vh;
+                    background-color: orange;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                }
+
                 .slide-selector-container{
                         height: 100%;
                         display: flex;
@@ -89,7 +105,10 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                 }
                 .slide-selector:hover{
                     border-left: 20px solid rgba(255,255,255,0.5);
-                    cursor: pointer;
+                }
+
+                #blur-true{
+                    filter: blur(3px)
                 }
 
                 .hover-image{
@@ -97,7 +116,6 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                     width: 61.6vw;
                 }
                 .main-image-overlay{
-                    cursor: pointer;
                     position: relative;
                     height: 0px;
                     width: 0px;
@@ -124,17 +142,10 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                 .show-code:hover h3{
                     color: orange;
                 }
-                button.show-code{
-                    height: 3rem;
-                    width: 15rem;
-                    background-image:linear-gradient(rgba(255,240,0,1),rgba(255,170,0,1));
-                    border: solid rgba(255,255,255,0.6) 0.05rem;
-                }
                 button.show-code:hover{
                     background-color: rgba(0,0,0, 0.2);
                     border: 2px solid  rgba(200,160,70, 0.7);
                     color: orange !important;
-                    cursor: pointer;
                 }
                         .info-container{
                             color: white;
@@ -154,7 +165,7 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                         .built-with {
                             display: flex !important;
                             flex-direction: row;
-                            background-image:linear-gradient(rgba(5,240,0, 0.3),rgba(255,170,0, 1));
+                            background-color:rgba(30,30,30, 1);
                             width: 100%;
                             padding: 0.3rem;
                             height: 4rem;
@@ -209,6 +220,7 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({images}): JSX.Element =>
 
                 .store-item{
                     width: 85%;
+                    margin-bottom: 10rem;
                 }
                         `}
             </style>
