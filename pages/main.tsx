@@ -1,11 +1,15 @@
-import { GetServerSideProps, NextPage } from 'next'
+import { GetServerSideProps, GetStaticProps, NextPage } from 'next'
 import Head from 'next/head';
-import { FC, useEffect, useState } from 'react';
+import Image from 'next/image';
+import { StringifyOptions } from 'querystring';
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import CodeWars, { CodeWarsData } from '../components/code-wars';
 import EmblemMenu from '../components/emblems';
 import { GithubAccountData, GithubSubscribe, IdCard } from '../components/github-id';
 import Layout from '../components/layout'
+import { StoreModuleOne, StoreModuleTwo } from '../components/store-modules';
 import { useHandleSetBool } from '../hooks/setBooleanValues';
+import { useIncrementData } from '../hooks/setCounter';
 
 export interface MainProps {
     githubAccountData: GithubAccountData | null;
@@ -13,30 +17,31 @@ export interface MainProps {
     codeWarsData: CodeWarsData | null;
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const isNull = (value: any | null) => { if (value === null) { return false } return true }
+export const isUndefined = (value: any | null) => {if(value === undefined) {return false} return true}
+export const getStaticProps: GetStaticProps = async () => {
+
     const github = await fetch('https://api.github.com/users/riectivnoodes');
     const githubSubs = await fetch('https://api.github.com/users/riectivnoodes/subscriptions');
     let githubAccountData: GithubAccountData = await github.json();
     let githubSubscribe: GithubSubscribe = await githubSubs.json();
-    if (githubAccountData.message !== undefined ){
-        githubAccountData = null;
-        githubSubscribe = null;
-    }
+    if (isUndefined(githubAccountData.message)) { githubAccountData = null;githubSubscribe = null;}
     const codeWars = await fetch('https://www.codewars.com/api/v1/users/riectivnoodes');
     let codeWarsData: CodeWarsData | null = await codeWars.json();
     return { props: {githubAccountData, githubSubscribe, codeWarsData} } 
-  }
+}
 
 const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWarsData}) => {
 
     const [innerWidthProp, setInnerWidthProp] = useState<number>();
-    const [brighteness, setBrightness] = useState<number>(6);
-    const [bool, setBool] = useHandleSetBool('');
+    const [posBrighteness, setPosBrightness] = useState<number>(0);
+    const [negBrighteness, setNegBrightness] = useState<number>(0);
+    const [bool, setBool] = useHandleSetBool();
     const [activeEmblem, setActiveEmblem] = useState<string>('/images/propaganda.png');
 
     const updateWidth = () => setInnerWidthProp(window.innerWidth)
             useEffect(() => {
-            window.addEventListener('resize', updateWidth)
+                window.addEventListener('resize', updateWidth)
            updateWidth()
            return () => window.removeEventListener('resize', updateWidth)  
             }, [innerWidthProp, setInnerWidthProp])
@@ -48,13 +53,6 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
         //this is the call back function used in the child component
         //this scrolls the page to the value defined in the child component
     }
-
-    useEffect(() => {
-    }, [activeEmblem])
-    const handleEmblemMenuBool = () => {
-        setBool('openEmblemMenu')
-    }
-
 
     return (
         <>
@@ -81,9 +79,10 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                         </span>
                     <div className='user-data-container'>
                         {/** Components go here */}
-                        <IdCard githubAccountData={githubAccountData}
+                        <IdCard
+                            githubAccountData={githubAccountData}
                             githubSubscribe={githubSubscribe}
-                            onOpenEmblemMenu={handleEmblemMenuBool}
+                            onOpenEmblemMenu={(e) => { return setBool(e)}}
                             activeEmblem={activeEmblem} />
                         <CodeWars data={codeWarsData} />
                     </div>
@@ -91,8 +90,8 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                         <MainMenu/>
                     </div>
                     
-                    <div className='overlay' style={{ backgroundColor: `rgba(0,0,0, 0.5)` }}>
-                    <div className='overlay' style={{ backgroundColor: `rgba(255,255,255, 0.0${brighteness})` }}></div>
+                    <div className='overlay' style={{ backgroundColor: `rgba(0,0,0, 0.${negBrighteness})` }}>
+                    <div className='overlay' style={{ backgroundColor: `rgba(255,255,255, 0.${posBrighteness})` }}></div>
                         <Weapons />
                         <Store />
                         <Settings />
@@ -221,7 +220,6 @@ export const MainMenu: FC = () => {
     return (
         <>
             <div className='menu-title-container'>
-                <h1>WELCOME USER</h1>
             </div>
             <div className='menu-button-container'>
                 {buttons.map((data) => {
@@ -281,7 +279,6 @@ export const Weapons: FC = ({ }): JSX.Element => {
     return ( 
         <>
             <div className='weapons'>
-                <MainMenu></MainMenu>
             </div>
             <style jsx>
                 {`
@@ -297,22 +294,107 @@ export const Weapons: FC = ({ }): JSX.Element => {
     )
 }
 
-export const Store: FC = ({ }): JSX.Element => {
-    return ( 
+interface StoreOneObj {
+    sourceMain: string;
+    sourceBottom: string;
+    sourceMid: string;
+    sourceTop: string;
+    title: string;
+    description: string;
+    href: string;
+    madeWith: Array<string>;
+}
+
+export const Store: FC = (): JSX.Element => {
+
+    const storeOneArr: Array<StoreOneObj> = [{
+        sourceMain: '/images/beautyshop-main.png',
+        sourceBottom: '/images/beautyshop-one.png',
+        sourceMid: '/images/beautyshop-two.png',
+        sourceTop: '/images/beautyshop-three.png',
+        title: '',
+        description: ``,
+        href: '',
+        madeWith: [
+            '/images/react-2.svg',
+            '/images/Node.svg',
+            '/images/expressjs-icon.svg',
+            '/images/mongodb.svg',
+            '/images/SendGrid.svg',
+            '/images/stripe-ar21.svg'
+        ]
+    },{
+        sourceMain: '/mp4/retralink.gif',
+        sourceBottom: '/mp4/retralink.gif',
+        sourceMid: '/mp4/retralink.gif',
+        sourceTop: '/mp4/retralink.gif',
+        title: '',
+        description: ``,
+        href: '',
+        madeWith: [
+        '/images/react-2.svg',
+        '/images/Node.svg',
+        '/images/expressjs-icon.svg',
+        '/images/Solidity-Logo.wine.svg',
+        ]
+    }]
+
+    const [count, setCounter, setIncrement] = useIncrementData();
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIncrement(1, 'shopSlider', true)
+        }, 8000)
+        return () => clearInterval(interval)
+    }, [setIncrement])
+
+    return (
         <>
             <div className='store'>
+                <div className='store-wrapper'>
+                    <div className='store-container'>
+                        <StoreModuleOne
+                            sourceMain={storeOneArr[count['shopSlider']].sourceMain}
+                            sourceBottom={storeOneArr[count['shopSlider']].sourceBottom}
+                            sourceMid={storeOneArr[count['shopSlider']].sourceMid}
+                            sourceTop={storeOneArr[count['shopSlider']].sourceTop}
+                            title={storeOneArr[count['shopSlider']].title}
+                            description={storeOneArr[count['shopSlider']].description}
+                            href={storeOneArr[count['shopSlider']].href}
+                            madeWith={storeOneArr[count['shopSlider']].madeWith}
+                            onNextPrev={setIncrement} />
+                        <StoreModuleTwo images={['/images/redfoxinuss.png','/mp4/retralink.gif','/images/beautyshop-one.png']}/>
+                    </div>
+
+                </div>
             </div>
             <style jsx>
                 {`
-                .store{
-                    top: 10vh;
-                    height: 90vh;
-                    width: 100vw;
-                    position: absolute;
-                    transform: translateX(200vw);
-                }`}
+        .store-container{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 3rem;
+        }
+        .store-wrapper{
+            height: 80vh;
+            width: 97%;
+        }
+        .store{
+            top: 5rem;
+            height: 92vh;
+            width: 100vw;
+            position: absolute;
+            transform: translateX(200vw);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: scroll;
+
+        }`}
             </style>
-            </>
+        </>
     )
 }
 
@@ -320,16 +402,27 @@ export const Settings: FC = ({ }): JSX.Element => {
     return ( 
         <>
             <div className='settings'>
-                <h1>hello</h1>
+                <div className='settings-container'>
+
+                </div>
             </div>
             <style jsx>
                 {`
+
+                .settings-container{
+                    height: 86%;
+                    width: 97%;
+                }
                 .settings{
-                    top: 10vh;
+                    top: 6vh;
                     height: 90vh;
                     width: 100vw;
                     position: absolute;
                     transform: translateX(300vw);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
                 }`}
             </style>
             </>
