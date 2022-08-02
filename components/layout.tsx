@@ -16,7 +16,6 @@ const Layout: FC<LayoutProps> = ({ children, onLinkClick, innerWidthProp }): JSX
             <div className=''>
                 {children}
             </div>
-            <Footer />
         </>
     );
 }

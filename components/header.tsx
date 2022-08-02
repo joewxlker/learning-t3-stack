@@ -56,7 +56,7 @@ const Header: FunctionComponent<HeaderProps> = ({ onLinkClick, innerWidthProp })
             flex-direction: row;
             justify-content: space-evenly;
             align-items: flex-end;
-            background-color: rgba(255,255,255, .1);
+            background-image: linear-gradient(rgba(255,255,255,0.1), rgba(0,0,0,0.2)) ;
             z-index: 2;
         }
         `}</style>
@@ -74,7 +74,7 @@ export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, 
     
     return (
         <>
-        {activeLink === title && theme === '' && <span className='link-span' onClick={handleClick}><a className='active' ><h4>{title}</h4></a><div id='expand'/></span>}
+            {activeLink === title && theme === '' && <span className='link-span' onClick={handleClick}><a className='active' ><h4>{title}</h4></a><div id='expand'/></span>}
             {activeLink !== title && theme === '' && <span className='' onClick={handleClick}><a className='' ><h4>{title}</h4></a><div id='expand'/></span>}
             {activeLink === title && theme !== '' && <span className={`${theme}-active`} onClick={handleClick}><a className='active' ><h4>{title}</h4></a></span>}
             {activeLink !== title && theme !== '' && <span className={theme} onClick={handleClick}><a className='' ><h4>{title}</h4></a></span>}
@@ -87,14 +87,16 @@ export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, 
             color: black;
         }
         span.shop:hover {
-            background-color: rgba(210,150,50, 0.9);
+            background-image:linear-gradient(rgba(5,240,0,0.3),rgba(255,170,0,1));
         }
         span.shop {
-            background-color: rgba(210,150,50, 0.7);
+            opacity: 80%;
+            background-image:linear-gradient(rgba(5,240,0,0.3),rgba(255,170,0,1));
             animation: shopfade 0.5s reverse;
         }
         span.shop-active {
-            background-color: rgba(210,150,50, 1);
+            opacity: 100%;
+            background-image:linear-gradient(rgba(5,240,0,0.3),rgba(255,170,0,1));
             box-shadow: inset 0 1rem 2rem 0.1rem rgba(255,255,255,0.2);
             animation: shopfade 0.5s;
         }
@@ -119,7 +121,7 @@ export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, 
             align-items:center;
             height: 3.5rem;
             width: 20rem;
-            background-color: rgba(100,100,100, 0)
+            background-color: rgba(0,0,0, 0.0)
         }
         .active{
             color: orange;
@@ -145,14 +147,8 @@ export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, 
         }
 
         @keyframes shopfade {
-            from {
-                background-color: rgba(210,150,50, 0.7);
-                
-            }
-            to {
-                background-color: rgba(210,150,50, 1);
-                box-shadow: inset 0 1rem 2rem 0.1rem rgba(255,255,255,0.2);
-            }
+            from {opacity: 80%;}
+            to {opacity: 100%;}
         }
 
         `}</style>
