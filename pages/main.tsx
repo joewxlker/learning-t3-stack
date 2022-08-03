@@ -41,6 +41,7 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
     const updateWidth = () => setInnerWidthProp(window.innerWidth)
             useEffect(() => {
                 window.addEventListener('resize', updateWidth)
+                if(window.innerWidth < 800){ window.location.href = '/mobile'}
            updateWidth()
            return () => window.removeEventListener('resize', updateWidth)  
             }, [innerWidthProp, setInnerWidthProp])
@@ -60,7 +61,7 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
             </Head>
             <Layout onLinkClick={handleLinkClick} innerWidthProp={innerWidthProp}>
                 <>
-                    {bool['openEmblemMenu'] && <EmblemMenu onEmblemChange={value => { console.log(activeEmblem); setActiveEmblem(value)}} bool={bool['openEmblemMenu']} onCloseMenu={ e => setBool('openEmblemMenu')} />}
+                    {bool['openEmblemMenu'] && <EmblemMenu onEmblemChange={value => {setActiveEmblem(value)}} bool={bool['openEmblemMenu']} onCloseMenu={ e => setBool('openEmblemMenu')} />}
                     <span className='video-container'>
                         </span>
                     <div className='user-data-container'>
@@ -111,9 +112,9 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                     flex-direction: column;
                     position: absolute;
                     left: 2vw;
-                    top: 10vh;
+                    top: 7vh;
                     height: 80vh;
-                    width: 45vw;
+                    width: 35vw;
                 }
                 .alert-rate-limit{
                     display: flex;
@@ -197,28 +198,125 @@ export default Main;
 
 export const MainMenu: FC = () => {
 
+    const [active, setActive] = useState<string>();
+    const [animateHeight, setHeight] = useState<number>(100);
+
+    useEffect(() => {
+            setActive(buttons[0].name) 
+    }, [])
+    
+    useEffect(() => {
+        if (animateHeight >= 300) return;
+        const interval = setInterval(() => {
+            setHeight(animateHeight + 17);
+        }, 1)
+        return () => clearInterval(interval)
+    }, [animateHeight, setHeight])
+
     const buttons = [{
-        subName: 'Fight for a chance of survival',
-        name: 'THE GULAG',
+        subName: '',
+        name: 'GITHUB',
+        href: 'https://github.com/riectivnoodes',
+        source: '/images/github-dashboard.png',
+        metadata: ''
     },{
-        subName: 'Fight for a chance of survival',
-        name: 'BATTLE ROYAL',
+        subName: '',
+        name: 'LINKEDIN',
+        href: 'https://www.linkedin.com/in/joe-walker-89312a22a/',
+        source: '/images/linkedin-dashboard.png',
+        metadata: ''
     },{
-        subName: 'Fight for a chance of survival',
-        name: 'ZOMBIES',
+        subName: '',
+        name: 'RESUME',
+        source:'/images/resume-dashboard.png',
+        href: '',
+        metadata: ''
     }]
     return (
         <>
-            <div className='menu-title-container'>
+            <div className={`menu-title-container`}>
             </div>
-            <div className='menu-button-container'>
-                {buttons.map((data) => {
+            <div className={`menu-button-container`}>
+                {buttons.map((data, id) => {
                     return (
-                        <button className='menu-button'><h3>{data.subName}</h3><h2>{data.name}</h2></button>
+                        <button key={id} id='menu-button' className={`menu-button-${active === data.name}`} onClick={e => {
+                            if (active === data.name) return;
+                            setActive(data.name); setHeight(0)
+                        }}>
+                            {data.name !== active && <h2 >{data.name}</h2>}
+                            {/** If the left side is true, the element on the right side renders */}
+                            {data.name === active && <div className='text-overlay'>{data.name}</div>}
+                            {data.name === active && <div className='metadata'>
+                                <h3>{data.metadata}</h3>
+                            </div>}
+                            <div className='overlay-wrapper'>
+                                {/** wrapper div here to set height 0px*/}
+                                {data.name === active && <div className='overlay' onClick={e => window.open(data.href)}>
+                                    {/** nested overlay div positioned relativeley, 
+                                     * the wrapper allows this to have any size while 
+                                     * still positioned relatively and wihtout 
+                                     * effecting the flow of the page */}
+                                    <h2>{data.name}</h2>
+                                </div>}
+                            </div>
+                            <div className='animation-helper'>
+                                {/** 'helper' div here to target image height and animations as next Image doesnt allow style directly */}
+                                {data.name === active && data.name === buttons[0].name && <Image src={data.source} width={800} height={animateHeight} />}
+                                {/** Using state variables, useEffect and setInterval here to increment the 'animateHeight' variable from 0 - 300. 
+                                 */}
+                            {data.name === active && data.name === buttons[1].name && <Image src={data.source} width={800} height={animateHeight} />}
+                            {data.name === active && data.name === buttons[2].name && <Image src={data.source} width={800} height={animateHeight} />}
+                            </div>
+                        </button>
                 )})}
             </div>
             <style jsx >
                 {`
+
+                .metadata{
+                    background-color: rgba(250,100,100, 0.8);
+                    border-radius: 5px;
+                    width: 10rem;
+                    color: dark !important;
+                }
+
+                .metadata h3{
+                    color: black;
+                }
+
+                .animation-helper {
+                    height: 30vh;
+                    top: 0;
+                    object-fit: cover;
+                                }
+
+                .overlay-wrapper{
+                    top: 11rem;
+                    position: relative;
+                    height: 0px;
+                }
+                .overlay{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    animation: button-hover 0.5s;
+                    position: relative;
+                    background-image:linear-gradient(to right, rgba(0,0,0,0), black);
+                    box-shadow: inset 0rem 5rem 6rem 0.01rem white;
+                    color: rgb(50,50,50);
+                    z-index: 5;
+                    height: 5.5rem;
+                    width: 100%;
+                    border-bottom: solid 10px orange;
+                    cursor: pointer;
+                }
+
+                .text-overlay{
+                    position: absolute !important;
+                    z-index: 3 !important;
+                    bottom: -10vh !important;
+                }
 
                 button{
                     margin: 0.3rem;
@@ -231,27 +329,38 @@ export const MainMenu: FC = () => {
                 h2{
                     margin: 0rem;
                 }
-                .menu-button{
+                .menu-button-true{
+                    width: 90%;
+                    background-color: rgba(200,200,200, 0.1);
+                    border: 2px solid  rgba(200,200,200, 0.3);
+                    color: white;
+                    animation: expand 0.5s;
+                    cursor:pointer;
+                }
+
+                .menu-button-false{
                     width: 90%;
                     height: 5rem;
                     background-color: rgba(200,200,200, 0.1);
                     border: 2px solid  rgba(200,200,200, 0.3);
                     color: white;
                 }
-                .menu-button:hover{
-                    filter: blur(0.1px);
-                    -webkit-filter: blur(0.1px);
+
+                #menu-button:hover{
                     background-color: rgba(200,200,200, 0.3);
                     border: 2px solid  rgba(200,160,70, 0.7);
-                    color: orange;
                     box-shadow: 0rem 0rem 1rem 0.01rem rgba(200,160,70, 0.7);
+                    cursor: pointer;
                 }
+
                 .menu-button-container{
                     width: 90%;
                     color: white;
                     display: flex;
                     flex-direction: column;
                 }
+
+
                 .menu-title-container{
                     height: 5rem;
                     width: 90%;
@@ -259,6 +368,22 @@ export const MainMenu: FC = () => {
                     display: flex;
                     flex-direction: column;
                 }
+
+                @keyframes expand {
+                    from {height: 5rem;}
+                    to {height: 31vh;}
+                }
+
+                @keyframes fadein {
+                    from {opacity: 0%;}
+                    to {opacity: 100%;}
+                }
+
+                @keyframes button-hover {
+                    from {box-shadow: inset 0rem 0rem 0rem 0rem white}
+                    to {box-shadow: inset 0rem 5rem 6rem 0.01rem white}
+                }
+
                 `}
             </style>
         </>
@@ -353,11 +478,11 @@ export const Store: FC = (): JSX.Element => {
                             href={storeOneArr[count['shopSlider']].href}
                             madeWith={storeOneArr[count['shopSlider']].madeWith}
                             onNextPrev={setIncrement} />
-                        <StoreModuleTwo data={[{image: '/images/redfoxinuss.png', href: '', },
-                            { image: '/mp4/retralink.gif', href: '' },
+                        <StoreModuleTwo data={[{image: '/images/redfoxinuss.png', href: 'redfoxinu.com', },
+                            { image: '/mp4/retralink.gif', href: 'retralink.com' },
                             { image: '/images/beautyshop-one.png', href: ''}]} />
                     </div>
-                    <div className='cyborg-image-wrapper'><Image src='/images/cyborg-crouch.png' width={400} height={600} /></div>
+                    {/* <div className='cyborg-image-wrapper'><Image src='/images/cyborg-crouch.png' width={400} height={600} /></div> */}
                 </div>
                 
             </div>
