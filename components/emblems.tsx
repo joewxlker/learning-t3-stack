@@ -92,7 +92,7 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
                     height: 2.5rem;
                     bottom: 0px;
                     background-color: rgba(255,255,255,0.4);
-                    z-index: 100;
+                    z-index: 500;
                 }
 
                 .emblem-button{
@@ -161,7 +161,7 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
                     width: 100vw;
                     height: 100vh;
                     background-color: rgba(0,0,0,0.8);
-                    z-index: 3;
+                    z-index: 6;
                     animation: fade 1s;
                 }
                 .main{
@@ -173,7 +173,7 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
                     top: 15vh;
                     left: 10vw;
                     background-color: rgba(30,32,38,1);
-                    z-index: 4;
+                    z-index: 7;
                 }
 
                 @keyframes fade {
