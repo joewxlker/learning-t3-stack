@@ -1,16 +1,25 @@
 import Head from 'next/head'
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home():JSX.Element {
   const [loading, setLoading] = useState(true);
+  const [mobile, setMobile] = useState(false);
+
   setTimeout(() => {
     setLoading(false)
   }, 4000)
-  
-  if (!loading) {
-    window.location.href = '/main'
-  }
+
+  useEffect(() => {
+    if (!loading && window.innerWidth > 600) {
+      window.location.href = '/main'
+    } else {
+      setMobile(true);
+      if (!loading) {
+        window.location.href = '/mobile'
+      }
+    }
+  }, [loading, setLoading])
 
   return (
     <>
@@ -24,8 +33,8 @@ export default function Home():JSX.Element {
           <span className='bottom-span'>
             <div className='spinner'></div>
             <h2 style={{textAlign: 'center'}}>Tips...</h2>
-            </span>
-
+          </span>
+          {mobile && <h2>Loading mobile UI</h2>}
         </div>
         
         <Image className='background-image' src='/images/cyborg.jpeg' alt='' layout='fill'></Image>
