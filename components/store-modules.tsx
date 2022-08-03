@@ -31,8 +31,9 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                     <button id='prev' className='slide-selector' onClick={(e) => { handleClick(false) }}></button>
                     </span>
 
-                <div className='main-image-overlay'><div className='hover-image' onMouseEnter={e => setHover(true)} onMouseLeave={e => setHover(false)}>
-                </div></div>
+                <div className='main-image-overlay'>
+                    <div className='hover-image' onMouseEnter={e => setHover(true)} onMouseLeave={e => setHover(false)}/>
+                </div>
                 {hover && <span className='links-container' onMouseEnter={e => setHover(true)}><h1>VIEW CODE</h1></span>}
                 <div className='images-container' >
                     <div id={`blur-${hover}`} className='image-wrapper'>
@@ -42,7 +43,7 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                             <div className="built-with">
                             
                         {madeWith.map((source) => { return (
-                            <Image src={source} width={70} height={70} />
+                            <Image key={source} src={source} width={70} height={70} />
                             )})}
                             </div>
                             </div>
@@ -203,36 +204,35 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
     
     const [active, setActive] = useState('');
     const [hover, setHover] = useState<boolean>()
-    useEffect(() => {
-        console.log(active,hover,data[0].image)
-    }, [active, hover])
-    
+
     return (
         <>
             <div className='store-item' id='main'>
                 {data.map(({image, href}) => {
                     return (
-                        <>
-                            {hover && active === image && <div className={`links-wrapper`}
-                                onClick={e => window.open(href)}>
-                                <div
-                                className={`links-container`}
-                                onMouseEnter={e => {setHover(true); setActive(image)}}>
-                                <h2>View Project</h2></div>
-                            </div>}
+                        <span key={image}>
+                            {hover && active === image &&
+                                <div className={`links-wrapper`} onClick={e => window.open(href)}>
+                                    <div className={`links-container`} onMouseEnter={e => { setHover(true); setActive(image) }}>
+                                        <h2>View Project</h2>
+                                    </div>
+                                </div>}
+
                             <div
-                                id={active === image? `blur-${hover}` : ''}
+                                id={active === image ? `blur-${hover}` : ''}
                                 className='image-wrapper'
                                 onClick={e => window.open(href)}
-                                onMouseEnter={e => { setHover(true);  setActive(image)}}
+                                onMouseEnter={e => { setHover(true); setActive(image) }}
                                 onMouseLeave={e => setHover(false)}>
+                                
                                 <Image
                                     src={image}
                                     width={470}
                                     height={300} />
-                    </div>
-                    </>
-                    )})}
+                            </div>
+                        </span >
+                    );
+                })}
             </div>
 
             <style jsx>
@@ -240,6 +240,8 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
                 {`
 
                 #blur-true{
+                    position: relative;
+                    transform: translateY(-6rem);
                     filter: blur(3px);
                 }
 
@@ -261,9 +263,11 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
                     left: 30px;
                     background: orange;
                     z-index: 10;
+                    box-shadow: 0.7rem 0.5rem 01rem 0.2rem rgba(0,0,0, 0.5);
                 }
                 .image-wrapper{
                     cursor:pointer;
+                    position: relative;
                     display:flex;
                     justify-content: center;
                     align-items: center;
@@ -272,12 +276,10 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
                     box-shadow: 0.5rem 0.5rem 0.8rem 0.2rem rgba(0,0,0,0.5);
                 }
                 .store-item{
-                    background-image: linear-gradient(rgba(0,0,0, 0), rgba(40,40,40, 0.8));
                     width: 85%;
                     margin-bottom: 7rem;
                     display: flex;
-                    flex--direction:row;
-                    box-shadow: -0rem 4rem 3rem 0.6rem rgba(40,40,40,0.8);
+                    flex-direction:row;
                 }
                         `}
             </style>
