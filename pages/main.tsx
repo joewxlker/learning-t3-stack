@@ -1,7 +1,7 @@
-import { GetStaticProps, NextPage } from 'next'
+import { GetServerSideProps, GetStaticProps, NextPage } from 'next'
 import Head from 'next/head';
 import Image from 'next/image';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import CodeWars, { CodeWarsData } from '../components/code-wars';
 import EmblemMenu from '../components/emblems';
 import { GithubAccountData, GithubSubscribe, IdCard } from '../components/github-id';
@@ -17,8 +17,9 @@ export interface MainProps {
 }
 
 export const isNull = (value: any | null) => { if (value === null) { return false } return true }
-export const isUndefined = (value: any | null) => {if(value === undefined) {return false} return true}
-export const getStaticProps: GetStaticProps = async () => {
+export const isUndefined = (value: any | null) => { if (value === undefined) { return false } return true }
+
+export const getServerSideProps: GetServerSideProps = async () => {
 
     const github = await fetch('https://api.github.com/users/riectivnoodes');
     const githubSubs = await fetch('https://api.github.com/users/riectivnoodes/subscriptions');
@@ -35,12 +36,15 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
     const [innerWidthProp, setInnerWidthProp] = useState<number>();
     const [posBrighteness, setPosBrightness] = useState<number>(0);
     const [negBrighteness, setNegBrightness] = useState<number>(0);
+    const [windowPosition, setWindowPosition] = useState<string>();
+    const [bgAnimation, setBgAnimation] = useState<boolean>(false);
+    const [bgPosition, setBgPosition] = useState<number>();
     const [bool, setBool] = useHandleSetBool();
     const [activeEmblem, setActiveEmblem] = useState<string>('/logos/react.svg');
+    const background = useRef<HTMLDivElement>();
 
     const updateWidth = () => setInnerWidthProp(window.innerWidth)
     useEffect(() => {
-        console.log(githubSubscribe)
                 window.addEventListener('resize', updateWidth)
                 if(window.innerWidth < 800){ window.location.href = '/mobile'}
            updateWidth()
@@ -49,8 +53,13 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
     //This useEffect updates the inner width value
     //the inner width value is passed to the child components
 
-    const handleLinkClick = (props: number) => {
-        window.scrollTo(props, 0)
+    const handleLinkClick = (props: number, title: string) => {
+        window.scrollTo(props, 0);
+        if (props > bgPosition) setBgAnimation(true)
+        else setBgAnimation(false);
+        setBgPosition(props)
+        setWindowPosition(title);
+
         //this is the call back function used in the child component
         //this scrolls the page to the value defined in the child component
     }
@@ -63,8 +72,7 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
             <Layout onLinkClick={handleLinkClick} innerWidthProp={innerWidthProp}>
                 <>
                     {bool['openEmblemMenu'] && <EmblemMenu onEmblemChange={value => {setActiveEmblem(value)}} bool={bool['openEmblemMenu']} onCloseMenu={ e => setBool('openEmblemMenu')} />}
-                    <span className='video-container'>
-                        </span>
+                    
                     <div className='user-data-container'>
                         {/** Components go here */}
                         <IdCard
@@ -86,7 +94,7 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                         </div>
                     </>
             </Layout>
-            
+            <div id={windowPosition} className={`video-container  ${bgAnimation} ${windowPosition}`} ref={background}></div>
             <style jsx>
                 {`
 
@@ -94,14 +102,55 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                     box-shadow: 0 0 4rem 3rem rgba(0,0,0,0.7);
                     background-color: rgba(0,0,0,0.65);
                 }
-                
+
+                #PLAY{
+                    animation: translatePlayLeft 0.5s ease-in-out;
+                }
+                @keyframes translatePlayLeft { 
+                    from{transform: translateX(-100px);} 
+                    to{transform: translateX(0px);}
+                }
+                .WEAPONS{transform: translateX(-100px);}
+                div#WEAPONS.true {animation: translateWeapons 0.5s ease-in-out;}
+                div#WEAPONS.false  { animation: translateWeaponsRight 0.5s ease-in-out ;}
+                @keyframes translateWeapons{ 
+                    from{transform: translateX(-0px);} 
+                    to{transform: translateX(-100px);}
+                }
+                @keyframes translateWeaponsRight{
+                    from{transform: translateX(-200px);} 
+                    to{transform: translateX(-100px);}
+                }
+
+                .STORE{transform: translateX(-200px);}
+                div#STORE.true{animation: translateStore 0.5s ease-in-out;}
+                div#STORE.false{animation: translateStoreRight 0.5s ease-in-out;}
+                @keyframes translateStore{ 
+                    from{transform: translateX(-100px);} 
+                    to{transform: translateX(-200px);}
+                }
+                @keyframes translateStoreRight{ 
+                    from{transform: translateX(-300px);} 
+                    to{transform: translateX(-200px);}
+                }
+
+                .SETTINGS{transform: translateX(-300px);}
+                #SETTINGS{ animation: translateSettings 0.5s;}
+                @keyframes translateSettings{ 
+                    from{transform: translateX(-200px);} 
+                    to{transform: translateX(-300px);}
+                }
+
                 .video-container{
                     position: fixed;
+                    display: flex;
+                    justify-content: flex-end;
                     z-index: -2;
                     height: 100vh;
-                    width: 100vw;
-                    background-size: cover;
+                    width: 120vw;
+                    background-size: 120vw 100vh ;
                     background-image: url('/images/cyborg.jpeg');
+                    overflow: scroll;
                 }
                 .overlay{
                     display: absolute;
@@ -331,6 +380,7 @@ export const MainMenu: FC = () => {
                     width: 100%;
                     border-bottom: solid 10px orange;
                     cursor: pointer;
+                    animation: fadein 1s;
                 }
 
                 .text-overlay{
@@ -466,12 +516,12 @@ export const Store: FC = (): JSX.Element => {
         description: ``,
         href: '',
         madeWith: [
-            '/images/react-2.svg',
-            '/images/Node.svg',
+            '/logos/react.svg',
+            '/logos/node.svg',
             '/images/expressjs-icon.svg',
-            '/images/mongodb.svg',
+            '/logos/mongo.svg',
             '/images/SendGrid.svg',
-            '/images/stripe-ar21.svg'
+            '/logos/stripe.svg'
         ]
     },{
         sourceMain: '/mp4/retralink.gif',
@@ -482,8 +532,8 @@ export const Store: FC = (): JSX.Element => {
         description: ``,
         href: '',
         madeWith: [
-        '/images/react-2.svg',
-        '/images/Node.svg',
+        '/logos/react.svg',
+        '/logos/node.svg',
         '/images/expressjs-icon.svg',
         '/images/Solidity-Logo.wine.svg',
         ]
