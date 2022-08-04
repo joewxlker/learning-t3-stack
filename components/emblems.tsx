@@ -16,14 +16,26 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
     const [mousePositionY, setMousePositionY] = useState(0);
     
     const source = [
-        '/images/react-2.svg',
-        '/images/Node.svg',
+        '/logos/react.svg',
+        '/logos/node.svg',
         '/images/expressjs-icon.svg',
-        '/images/mongodb.svg',
+        '/logos/mongo.svg',
         '/images/SendGrid.svg',
-        '/images/stripe-ar21.svg',
-        '/images/Bootstrap.svg',
-        '/images/Solidity-Logo.wine.svg'
+        '/logos/stripe.svg',
+        '/logos/bootstrap.svg',
+        '/images/Solidity-Logo.wine.svg',
+        '/logos/css.svg',
+        '/logos/html.svg',
+        '/logos/adobei.svg',
+        '/logos/adobep.svg',
+        '/logos/aftere.svg',
+        '/logos/eth.svg',
+        '/logos/heroku.svg',
+        '/logos/typescript.svg',
+        '/logos/javascript.svg',
+        '/logos/npm.svg',
+        '/logos/nextjs.svg',
+
     ]
 
     const emblems = [
@@ -35,6 +47,17 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
         { source: source[5], description: 'STRIPE', type: 2 },
         { source: source[6], description: 'BOOTSTRAP', type: 0 },
         { source: source[7], description: 'SOLIDITY', type: 2 },
+        { source: source[8], description: 'CSS3', type: 0 },
+        { source: source[9], description: 'HTML5', type: 0 },
+        { source: source[10], description: 'ILLUSTRATOR', type: 2 },
+        { source: source[11], description: 'PHOTOSHOP', type: 2 },
+        { source: source[12], description: 'AFTEREFFECTS', type: 2 },
+        { source: source[13], description: 'ETHEREUM', type: 2 },
+        { source: source[14], description: 'HEROKU', type: 1 },
+        { source: source[15], description: 'TYPESCRIPT', type: 1 },
+        { source: source[16], description: 'JAVASCRIPT', type: 0 },
+        { source: source[17], description: 'NPM', type: 2 },
+        { source: source[18], description: 'NEXT', type: 0 },
     ]
 
     useEffect(() => {
@@ -68,7 +91,7 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
                         {emblems.map(({source, description, type}) => {
                                 return (
                                 <>
-                                   {emblemType === type && <button className='emblem-button'  onClick={e => { changeEmblem(source); closeMenu(e)}}>
+                                   {emblemType === type && <button className='emblem-button'title='clicking this changes your emblem' onClick={e => { changeEmblem(source); closeMenu(e)}}>
                                         <Image src={source} height={100} width={100} onMouseEnter={e => setQueryEmblem(description)} onMouseLeave={e => setQueryEmblem('')}/>
                                     </button>}
                                     </>
