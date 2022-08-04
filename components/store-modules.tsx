@@ -61,10 +61,11 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                         </div>
                     </span>
                     
-                    <span className="slide-selector-container">
+
+                </div>
+                <span className="slide-selector-container">
                         <button id='next' className='slide-selector' onClick={(e) => { handleClick(true) }}></button>
                     </span>
-        </div>
             </div>
 
             <style jsx>
@@ -244,7 +245,7 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
 
                 #blur-true{
                     position: relative;
-                    transform: translateY(-6rem);
+                    transform: translateY(-6.5rem);
                     filter: blur(3px);
                 }
 
@@ -260,10 +261,10 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
-                    width: 23vw;
+                    width: 20vw;
+                    left: 2.3rem;
                     height: 10vh;
                     top: 100px;
-                    left: 30px;
                     background: orange;
                     z-index: 10;
                     box-shadow: 0.7rem 0.5rem 01rem 0.2rem rgba(0,0,0, 0.5);
@@ -281,8 +282,10 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
                 .store-item{
                     width: 85%;
                     margin-bottom: 7rem;
+                    margin: auto;
                     display: flex;
                     flex-direction:row;
+                    justify-content: center;
                 }
                         `}
             </style>

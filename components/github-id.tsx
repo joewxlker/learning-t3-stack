@@ -90,7 +90,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                         {activeEmblem === undefined && <Image src={'/logos/react.svg'} height={100} width={110} onMouseOver={e => setBool('hover')} />}
                         {activeEmblem !== undefined &&<Image src={`${activeEmblem}`}   height={100} width={110} onMouseOver={e => setBool('hover')} />}
                     </span>
-                    <span className='id-span'>
+                    <span className='id-span' id='id-span-id'>
                         <h3>[jw]{githubAccountData !== null ? githubAccountData.login : 'Joseph Walker'}</h3>
                         <div className='slider-container'>
                             <div className='slider-wrapper'>
@@ -192,6 +192,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                 width: 30%;
             }
             .github-span{
+                
                 background-color: rgba(200,200,200, 0.1);
                 border: 2px solid  rgba(200,200,200, 0.3);
                 display: flex;
@@ -203,9 +204,9 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             .spinner{
                 position: relative;
                 left: 20rem;
-                top: 2.4rem;
-                height:3rem;
-                width: 3rem;
+                top: 1.4rem;
+                height:1rem;
+                width: 1rem;
                 animation: spinner 3s linear infinite;
             }
             .hide-alert{
@@ -217,6 +218,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                 border: none;
             }
             .main-span{
+                
                 padding: 0.3rem;                    
                 -webkit-filter: blur(0.1px);
                 background-color: rgba(200,200,200, 0.1);
@@ -253,7 +255,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             }
 
             .slider-wrapper{
-                animation: reveal 0.5s;
+                animation: reveal 1s;
                 border: none;
                 height: 0.6rem;
             }
@@ -262,8 +264,12 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                 width: 90%;
                 height: inherit;
                 background-color: rgba(255,255,255,0.8);
-                animation: expand 1s 0.5s;
+                animation: expandslider 1s ease-in 1s;
                 border: none;
+            }
+
+            #id-span-id{
+                animation: reveal 1s;
             }
 
             .id-span{
@@ -274,10 +280,11 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                 width: 90%;
                 max-width: 90% !important;
                 background-color: rgba(100,100,100,0.1);
-                animation: slidefromright 0.5s;
+                animation: slidefromright 0.5s 0.5s;
                 overflow: hidden;
             }
         .main{
+            animation: fadein 1s;
             display: flex;
             flex-direction: column;
             justify-content: stretch;
@@ -313,7 +320,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             }
         }
 
-        @keyframes expand {
+        @keyframes expandslider {
             from {
                 width: 0px;
             }
