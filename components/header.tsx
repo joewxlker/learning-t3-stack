@@ -11,7 +11,7 @@ export interface NavLinkProps extends HeaderProps {
 
 export interface HeaderProps{
     innerWidthProp: number;
-    onLinkClick: (text: number) => void;
+    onLinkClick: (text: number, title: string) => void;
 }
 
 const Header: FunctionComponent<HeaderProps> = ({ onLinkClick, innerWidthProp }): JSX.Element => {
@@ -69,7 +69,7 @@ export default Header;
 export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, setActiveLink, activeLink, theme}): JSX.Element => {
 
     const handleClick = useCallback(() => {
-        onLinkClick(innerWidthProp);
+        onLinkClick(innerWidthProp,title);
         setActiveLink(title);
     }, [onLinkClick])
     
