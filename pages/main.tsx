@@ -36,10 +36,11 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
     const [posBrighteness, setPosBrightness] = useState<number>(0);
     const [negBrighteness, setNegBrightness] = useState<number>(0);
     const [bool, setBool] = useHandleSetBool();
-    const [activeEmblem, setActiveEmblem] = useState<string>('/images/propaganda.png');
+    const [activeEmblem, setActiveEmblem] = useState<string>('/logos/react.svg');
 
     const updateWidth = () => setInnerWidthProp(window.innerWidth)
-            useEffect(() => {
+    useEffect(() => {
+        console.log(githubSubscribe)
                 window.addEventListener('resize', updateWidth)
                 if(window.innerWidth < 800){ window.location.href = '/mobile'}
            updateWidth()
@@ -88,6 +89,11 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
             
             <style jsx>
                 {`
+
+                .user-data-container{
+                    box-shadow: 0 0 4rem 3rem rgba(0,0,0,0.7);
+                    background-color: rgba(0,0,0,0.65);
+                }
                 
                 .video-container{
                     position: fixed;
@@ -113,8 +119,6 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
                     position: absolute;
                     left: 2vw;
                     top: 7vh;
-                    height: 80vh;
-                    width: 35vw;
                 }
                 .alert-rate-limit{
                     display: flex;
@@ -168,6 +172,9 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
         p{
             padding: 0%;
             margin: 0.2rem;
+            color: rgba(80,80,80,1);
+            font-weight: 600;
+            font-size: 22px;
         }
 
         h1{
@@ -218,32 +225,35 @@ export const MainMenu: FC = () => {
         name: 'GITHUB',
         href: 'https://github.com/riectivnoodes',
         source: '/images/github-dashboard.png',
-        metadata: ''
+        metadata: '',
+        icon: '/logos/github.svg'
     },{
         subName: '',
         name: 'LINKEDIN',
         href: 'https://www.linkedin.com/in/joe-walker-89312a22a/',
         source: '/images/linkedin-dashboard.png',
-        metadata: ''
+        metadata: '',
+        icon: '/logos/linkedin.svg'
     },{
         subName: '',
         name: 'RESUME',
         source:'/images/resume-dashboard.png',
         href: '',
-        metadata: ''
+        metadata: '',
+        icon: '/logos/download.svg'
     }]
     return (
         <>
             <div className={`menu-title-container`}>
             </div>
             <div className={`menu-button-container`}>
-                {buttons.map((data, id) => {
+                {buttons.map((data) => {
                     return (
-                        <button key={id} id='menu-button' className={`menu-button-${active === data.name}`} onClick={e => {
+                        <button key={data.name} id='menu-button' className={`menu-button-${active === data.name}`} onClick={e => {
                             if (active === data.name) return;
                             setActive(data.name); setHeight(0)
                         }}>
-                            {data.name !== active && <h2 >{data.name}</h2>}
+                            {data.name !== active && <span><Image src={data.icon} width={50} height={50} /><h2>{data.name}</h2></span>}
                             {/** If the left side is true, the element on the right side renders */}
                             {data.name === active && <div className='text-overlay'>{data.name}</div>}
                             {data.name === active && <div className='metadata'>
@@ -256,11 +266,11 @@ export const MainMenu: FC = () => {
                                      * the wrapper allows this to have any size while 
                                      * still positioned relatively and wihtout 
                                      * effecting the flow of the page */}
-                                    <h2>{data.name}</h2>
+                                    <span><Image src={data.icon} width={50} height={50} /><h2>{data.name}</h2></span>
                                 </div>}
                             </div>
                             <div className='animation-helper'>
-                                {/** 'helper' div here to target image height and animations as next Image doesnt allow style directly */}
+                                {/** 'helper' div here to target image height and animations as next Image doesnt allow image styling directly */}
                                 {data.name === active && data.name === buttons[0].name && <Image src={data.source} width={800} height={animateHeight} />}
                                 {/** Using state variables, useEffect and setInterval here to increment the 'animateHeight' variable from 0 - 300. 
                                  */}
@@ -268,11 +278,22 @@ export const MainMenu: FC = () => {
                             {data.name === active && data.name === buttons[2].name && <Image src={data.source} width={800} height={animateHeight} />}
                             </div>
                         </button>
-                )})}
+                    )
+                })}
+                <button id='menu-button' className={`menu-button-false`} onClick={e => {
+                        }}><h2>Feedback</h2></button>
             </div>
             <style jsx >
                 {`
 
+                span{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    height: 100%;
+                    width: 50%;
+                }
                 .metadata{
                     background-color: rgba(250,100,100, 0.8);
                     border-radius: 5px;
@@ -300,10 +321,10 @@ export const MainMenu: FC = () => {
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
-                    animation: button-hover 0.5s;
+                    animation: button-hover 1s;
                     position: relative;
                     background-image:linear-gradient(to right, rgba(0,0,0,0), black);
-                    box-shadow: inset 0rem 5rem 6rem 0.01rem white;
+                    box-shadow: inset 0rem 5rem 6rem 0.01rem black;
                     color: rgb(50,50,50);
                     z-index: 5;
                     height: 5.5rem;
@@ -330,22 +351,28 @@ export const MainMenu: FC = () => {
                     margin: 0rem;
                 }
                 .menu-button-true{
-                    width: 90%;
+                    width: 100%;
                     background-color: rgba(200,200,200, 0.1);
                     border: 2px solid  rgba(200,200,200, 0.3);
                     color: white;
                     animation: expand 0.5s;
                     cursor:pointer;
+                    
                 }
 
                 .menu-button-false{
-                    width: 90%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
                     height: 5rem;
                     background-color: rgba(200,200,200, 0.1);
                     border: 2px solid  rgba(200,200,200, 0.3);
                     color: white;
+                    background-size: 900px 80px;
+                    background-position: center;
+                    background-repeat: no-repeat;
                 }
-
                 #menu-button:hover{
                     background-color: rgba(200,200,200, 0.3);
                     border: 2px solid  rgba(200,160,70, 0.7);
@@ -353,20 +380,28 @@ export const MainMenu: FC = () => {
                     cursor: pointer;
                 }
 
-                .menu-button-container{
-                    width: 90%;
+                #menu-button:hover .overlay-wrapper .overlay{
                     color: white;
+                }
+
+                .menu-button-container{
+                    width: 27vw;
+                    color: white;
+                    height: 70vh;
                     display: flex;
                     flex-direction: column;
+                    box-shadow: 0 0 5rem 3rem rgba(0,0,0,0.5);
+                    background-color: rgba(0,0,0,0.4);
                 }
 
 
                 .menu-title-container{
                     height: 5rem;
-                    width: 90%;
+                    width: 100%;
                     color: white;
                     display: flex;
                     flex-direction: column;
+                    
                 }
 
                 @keyframes expand {
@@ -380,8 +415,8 @@ export const MainMenu: FC = () => {
                 }
 
                 @keyframes button-hover {
-                    from {box-shadow: inset 0rem 0rem 0rem 0rem white}
-                    to {box-shadow: inset 0rem 5rem 6rem 0.01rem white}
+                    from {box-shadow: inset 0rem 0rem 0rem 0rem black}
+                    to {box-shadow: inset 0rem 5rem 6rem 0.01rem black}
                 }
 
                 `}
@@ -467,7 +502,6 @@ export const Store: FC = (): JSX.Element => {
             <div className='store'>
                 <div className='store-wrapper'>
                     <div className='store-container'>
-                        <h1>PROJECTS</h1>
                         <StoreModuleOne
                             sourceMain={storeOneArr[count['shopSlider']].sourceMain}
                             sourceBottom={storeOneArr[count['shopSlider']].sourceBottom}
@@ -527,22 +561,61 @@ export const Store: FC = (): JSX.Element => {
 }
 
 export const Settings: FC = ({ }): JSX.Element => {
+
+    const elementData = [{
+        title: 'graphics',
+        listItems: ['brighteness','color','quality']
+    },{
+        title: 'sound',
+        listItems: ['sound-effects','music','mute']
+    },{
+        title: 'controls',
+        listItems: ['scroll-left','scroll-right','contact-me']
+    }]
+
     return ( 
         <>
             <div className='settings'>
-                <div className='settings-container'>
-
-                </div>
+                <div className='main-container'>
+                    {elementData.map((data) => {
+                        return (
+                            <div style={{width: `${100 / elementData.length}%`}}>
+                                <h1>{data.title}</h1>
+                                <ul>
+                                    {data.listItems.map((listData) => {
+                                        return (
+                                            <li><p>{listData}</p></li>
+                                    )})}
+                                </ul>
+                                </div>
+                        )
+                    })}
+                    </div>
             </div>
             <style jsx>
                 {`
 
+                .main-container{
+                    display: flex;
+                    flex-direction: row;
+                    height: 90%;
+                    width: 70%;
+                    padding: 5rem 7rem;
+                    background-color: rgba(0,0,0,0.3);
+                    box-shadow: 0 0 10rem 3rem rgba(0,0,0,0.8);
+                    animation: fadeinsettings 1s linear;
+                    background-image: url('/ui-elements/settings-bkg.svg');
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    border: 3px solid rgba(255,255,255,0.3);
+                }
                 .settings-container{
-                    height: 86%;
-                    width: 97%;
+                    height: 90%;
+                    width: 70%;
                 }
                 .settings{
-                    top: 6vh;
+                    top: 9.5vh;
                     height: 90vh;
                     width: 100vw;
                     position: absolute;
@@ -551,6 +624,16 @@ export const Settings: FC = ({ }): JSX.Element => {
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
+                }
+                
+                @keyframes fadeinsettings {
+                    from {
+                        background-color: rgba(0,0,0,0);
+                        box-shadow: 0 0 10rem 10rem rgba(0,0,0,0);
+                    }
+                    to {  
+                        background-color: rgba(0,0,0,0.3);
+                        box-shadow: 0 0 10rem 3rem rgba(0,0,0,0.8);
                 }`}
             </style>
             </>
