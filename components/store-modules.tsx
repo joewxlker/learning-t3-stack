@@ -88,7 +88,6 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                 }
 
                 .slide-selector-container{
-                        height: 100%;
                         display: flex;
                         flex-direction: column;
                         justify-content:center;
@@ -98,14 +97,17 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                     transform: scaleX(-100%);
                 }
                 .slide-selector{
-                    border-top: 15vw solid transparent;
-                    border-bottom: 15vw solid transparent;
-                    border-left: 20px solid rgba(255,255,255,0.1);
-                    background: none;
-                    margin: 0.5rem 3rem;
+                    height: 100%;
+                    width: 8rem;
+                    background-color: rgba(0,0,0,0);
+                    background-image: url('/ui-elements/arrow-one.svg');
+                    background-repeat: no-repeat;
+                    border: none;
+                    opacity: 30%;
                 }
                 .slide-selector:hover{
-                    border-left: 20px solid rgba(255,255,255,0.5);
+                    opacity: 100%;
+                    cursor: pointer;
                 }
 
                 #blur-true{
@@ -162,6 +164,7 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                             width: 100%;
                             display: flex;
                             flex-direction: row;
+                            justify-content: center;
                         }
                         .built-with {
                             display: flex !important;
