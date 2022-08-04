@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React, { Dispatch, FC, FunctionComponent, SetStateAction, useCallback, useState} from "react";
 
 export interface NavLinkProps extends HeaderProps {
@@ -74,10 +75,10 @@ export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, 
     
     return (
         <>
-            {activeLink === title && theme === '' && <span className='link-span' onClick={handleClick}><a className='active' ><h4>{title}</h4></a><div id='expand'/></span>}
-            {activeLink !== title && theme === '' && <span className='' onClick={handleClick}><a className='' ><h4>{title}</h4></a><div id='expand'/></span>}
-            {activeLink === title && theme !== '' && <span className={`${theme}-active`} onClick={handleClick}><a className='active' ><h4>{title}</h4></a></span>}
-            {activeLink !== title && theme !== '' && <span className={theme} onClick={handleClick}><a className='' ><h4>{title}</h4></a></span>}
+            {activeLink === title && theme === '' && <span className='link-span' onClick={handleClick}><a className='active' ><h4>{title}</h4></a><div id='expand'><Image src='/ui-elements/spinner-orange.svg' width={20} height={20}/></div></span>}
+            {activeLink !== title && theme === '' && <span className='' onClick={handleClick}><a className='' ><h4>{title}</h4></a><div id='expand'><Image src='/ui-elements/spinner-black.svg' width={20} height={20}/></div></span>}
+            {activeLink === title && theme !== '' && <span className={`${theme}-active`} onClick={handleClick}><a className='active' ><h4>{title}</h4></a><div id='expand'><Image src='/ui-elements/spinner-blue.svg' width={20} height={20}/></div></span>}
+            {activeLink !== title && theme !== '' && <span className={theme} onClick={handleClick}><a className='' ><h4>{title}</h4></a><div id='expand'><Image src='/ui-elements/spinner-blue.svg' width={20} height={20}/></div></span>}
             <style jsx>{`
         span{
             cursor: pointer;
@@ -105,9 +106,6 @@ export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, 
         #expand{
             position: relative;
             transform: translateY(-5px);
-            height: 0.7rem;
-            width: 0.7rem;
-            background-color: rgba(100, 200, 10, 0.6);
         }
         span.link-span{
             background-image: linear-gradient( rgba(100,100,100, 0), rgba(200,100,10, 0.3));
