@@ -33,36 +33,45 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
     const [count, setCount, setIncrement] = useIncrementData();
     const [loading, setLoading] = useState(true);
     const [bool, setBool] = useHandleSetBool();
+
+    //TODO fix delay in RepoValues / Commit counts
     
     useEffect(() => {
         setCount('iterateRepoValues', 1)
         if (!isNull(githubAccountData)) return;
         setBool('githubData')
-        getCommitData(githubAccountData,githubSubscribe);
+        setTimeout(() => {
+            getCommitData(githubAccountData, githubSubscribe);
+        }, 100)
     }, [])
     
     useEffect(() => {
         const interval = setInterval(() => {
             if (!isNull(githubAccountData)) return;
             setIncrement((githubAccountData.public_repos - 1), 'iterateRepoValues', true);
-            getCommitData(githubAccountData,githubSubscribe);
+            setTimeout(() => {
+                getCommitData(githubAccountData, githubSubscribe);
+            }, 100)
            setIncrement(2, 'iteratePValues', true);
         }, 8000)
         return () => clearInterval(interval)
     }, [count,setCount])
 
 
-    const openEmblemMenu = useCallback(() => {
+    const openEmblemMenu = useCallback(async() => {
         return onOpenEmblemMenu('openEmblemMenu');
     }, [])
 
     const getCommitData = async (data: object | null | undefined, subs: object | null | undefined) => {
-        const arr = [data, subs];
-        for (let v in arr) { if (!isNull(arr[v]) || !isUndefined(arr[v])) return setLoading(false)}
-        const res = await fetch(`https://api.github.com/repos/riectivnoodes/${subs[count['iterateRepoValues'] !== undefined ? count['iterateRepoValues'] : 0].name}/commits`);
-        const updateData = await res.json();
-        return [setCount('repos', updateData.length),setLoading(false)]
+
+            const arr = [data, subs];
+            for (let v in arr) { if (!isNull(arr[v]) || !isUndefined(arr[v])) return setLoading(false) }
+            const res = await fetch(`https://api.github.com/repos/riectivnoodes/${subs[count['iterateRepoValues'] !== undefined ? count['iterateRepoValues'] : 0].name}/commits`);
+            const updateData = await res.json();
+            return [setCount('repos', updateData.length), setLoading(false), updateData]
+       
     }
+    
     const idPText = [
         `Current repos ${githubAccountData !== null ? githubAccountData.public_repos : null} ...`,
         `Working on node ${githubAccountData !== null ? githubAccountData.node_id : null} ...`,
@@ -78,7 +87,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                     </div></div>}
                 <span className='main-span' >
                     <span id={`${bool['hover']}`} className='emblem-container'>
-                        {activeEmblem === undefined && <Image src={''} height={100} width={110} onMouseOver={e => setBool('hover')} />}
+                        {activeEmblem === undefined && <Image src={'/logos/react.svg'} height={100} width={110} onMouseOver={e => setBool('hover')} />}
                         {activeEmblem !== undefined &&<Image src={`${activeEmblem}`}   height={100} width={110} onMouseOver={e => setBool('hover')} />}
                     </span>
                     <span className='id-span'>
@@ -101,10 +110,16 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                     </span>
                 </span>
                 {bool['githubData'] && <div className='alert-rate-limit'>
-                    <span className='hide-alert' ><h4>you have been rate limited by github. Data from github will not show</h4><button
+                    <span className='hide-alert' ><p>you have been rate limited by github. Data from github will not show</p><button
                         onClick={e => setBool('githubData')} className='alert-button'>X</button></span>
                 </div>}
-                {loading && !bool['githubData'] && <span><h4>Github Pending...</h4><div className='spinner'></div></span>}
+                {loading && !bool['githubData'] &&
+                    <>
+                        <div className='spinner'>
+                            <Image src='/ui-elements/spinner-orange.svg' width={50} height={50} />
+                        </div>
+                        <h4 id='spinner-text'>Github Pending...</h4>
+                    </>}
                 <>
                     {githubAccountData !== null && <div className='github-stats-container'>
                         <span id='repo' className='github-span'>{githubAccountData !== null ?
@@ -124,6 +139,14 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
 
             </div>
             <style jsx>{`
+
+            p{
+                color: white;
+                font-size: 15px;
+            }
+            #spinner-text{
+                text-align: center;
+            }
 
             .emblem-container{
                 height: 95%;
@@ -179,11 +202,11 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             }
             .spinner{
                 position: relative;
+                left: 20rem;
                 top: 2.4rem;
-                height:0.2rem;
+                height:3rem;
                 width: 3rem;
-                animation: spinner 2s infinite;
-                background-color:white;
+                animation: spinner 3s linear infinite;
             }
             .hide-alert{
                 animation: reveal 0.5s;
@@ -263,6 +286,8 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             top: 9rem;
             right: 2rem;
             border: none;
+                    box-shadow: 0 0 4rem 3rem rgba(0,0,0,0.7);
+                    background-color: rgba(0,0,0,0.65);
         }
 
         @keyframes reveal {
