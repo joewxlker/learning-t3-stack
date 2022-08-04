@@ -46,11 +46,11 @@ export const CodeWarsId: FC<CodeWarsProps> = ({ data }) => {
         <>
             <div onMouseEnter={handleHover} id={`${hover}`} className='main' >
                 <h3>__ CodeWars __</h3>
-                <span><h4>CodeWars: {data.name}</h4></span>
-                <span>{data.leaderboardPosition !== null && <h4>LeaderBoard Position: {data.leaderboardPosition}</h4>}</span>
-                <span>{data.leaderboardPosition === null && <h4>LeaderBoard Position: null</h4>}</span>
-                <span><h4>Score: {data.ranks.languages.javascript.score}</h4></span>
-                <span><h4>Rank: {data.ranks.overall.name}</h4></span>
+                <span><p>CodeWars: {data.name}</p></span>
+                <span>{data.leaderboardPosition !== null && <p>LeaderBoard Position: {data.leaderboardPosition}</p>}</span>
+                <span>{data.leaderboardPosition === null && <p>LeaderBoard Position: null</p>}</span>
+                <span><p>Score: {data.ranks.languages.javascript.score}</p></span>
+                <span><p>Rank: {data.ranks.overall.name}</p></span>
             </div>
             {hover && <div className="open-codewars" onMouseLeave={handleHover} onClick={e => { e.preventDefault(); window.open('https://www.codewars.com/users/riectivnoodes') }}>
                 <span title='opens new link in the browser' className='open-codewars-span'><h2>View Codewars Profile</h2></span>
@@ -59,6 +59,10 @@ export const CodeWarsId: FC<CodeWarsProps> = ({ data }) => {
             #true{
                 filter: blur(3px);
                 animation: slowblur 0.5s;
+            }
+            p{
+                font-size: 15px;
+                color: white;
             }
             h2{
                 color: white;
