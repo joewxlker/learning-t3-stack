@@ -4,11 +4,14 @@ import Image from 'next/image';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import CodeWars, { CodeWarsData } from '../components/code-wars';
 import EmblemMenu from '../components/emblems';
+import { Form } from '../components/form';
 import { GithubAccountData, GithubSubscribe, IdCard } from '../components/github-id';
 import Layout from '../components/layout'
+import PopupMenu from '../components/popup';
 import { StoreModuleOne, StoreModuleTwo } from '../components/store-modules';
 import { useHandleSetBool } from '../hooks/setBooleanValues';
 import { useIncrementData } from '../hooks/setCounter';
+import { sendgrid } from '../server/api\'s/all';
 
 export interface MainProps {
     githubAccountData: GithubAccountData | null;
@@ -25,13 +28,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const githubSubs = await fetch('https://api.github.com/users/riectivnoodes/subscriptions');
     let githubAccountData: GithubAccountData = await github.json();
     let githubSubscribe: GithubSubscribe = await githubSubs.json();
-    if (isUndefined(githubAccountData.message)) { githubAccountData = null;githubSubscribe = null;}
+    if (isUndefined(githubAccountData.message)) { githubAccountData = null; githubSubscribe = null; }
     const codeWars = await fetch('https://www.codewars.com/api/v1/users/riectivnoodes');
     let codeWarsData: CodeWarsData | null = await codeWars.json();
-    return { props: {githubAccountData, githubSubscribe, codeWarsData} } 
+    return { props: { githubAccountData, githubSubscribe, codeWarsData } }
 }
 
-const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWarsData}) => {
+const Main: NextPage<MainProps> = ({ githubAccountData, githubSubscribe, codeWarsData }) => {
 
     const [innerWidthProp, setInnerWidthProp] = useState<number>();
     const [posBrighteness, setPosBrightness] = useState<number>(0);
@@ -45,11 +48,11 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
 
     const updateWidth = () => setInnerWidthProp(window.innerWidth)
     useEffect(() => {
-                window.addEventListener('resize', updateWidth)
-                if(window.innerWidth < 800){ window.location.href = '/mobile'}
-           updateWidth()
-           return () => window.removeEventListener('resize', updateWidth)  
-            }, [innerWidthProp, setInnerWidthProp])
+        window.addEventListener('resize', updateWidth)
+        if (window.innerWidth < 800) { window.location.href = '/mobile' }
+        updateWidth()
+        return () => window.removeEventListener('resize', updateWidth)
+    }, [innerWidthProp, setInnerWidthProp])
     //This useEffect updates the inner width value
     //the inner width value is passed to the child components
 
@@ -71,28 +74,28 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
             </Head>
             <Layout onLinkClick={handleLinkClick} innerWidthProp={innerWidthProp}>
                 <>
-                    {bool['openEmblemMenu'] && <EmblemMenu onEmblemChange={value => {setActiveEmblem(value)}} bool={bool['openEmblemMenu']} onCloseMenu={ e => setBool('openEmblemMenu')} />}
-                    
+                    {bool['openEmblemMenu'] && <PopupMenu><EmblemMenu onEmblemChange={value => { setActiveEmblem(value) }} bool={bool['openEmblemMenu']} onCloseMenu={e => setBool('openEmblemMenu')} /></PopupMenu>}
+
                     <div className='user-data-container'>
                         {/** Components go here */}
                         <IdCard
                             githubAccountData={githubAccountData}
                             githubSubscribe={githubSubscribe}
-                            onOpenEmblemMenu={(e) => { return setBool(e)}}
+                            onOpenEmblemMenu={(e) => { return setBool(e) }}
                             activeEmblem={activeEmblem} />
                         <CodeWars data={codeWarsData} />
                     </div>
                     <div className='main-menu-container'>
-                        <MainMenu/>
+                        <MainMenu />
                     </div>
-                    
+
                     <div className='overlay' style={{ backgroundColor: `rgba(0,0,0, 0.${negBrighteness})` }}>
-                    <div className='overlay' style={{ backgroundColor: `rgba(255,255,255, 0.${posBrighteness})` }}></div>
+                        <div className='overlay' style={{ backgroundColor: `rgba(255,255,255, 0.${posBrighteness})` }}></div>
                         <Weapons />
                         <Store />
                         <Settings />
-                        </div>
-                    </>
+                    </div>
+                </>
             </Layout>
             <div id={windowPosition} className={`video-container  ${bgAnimation} ${windowPosition}`} ref={background}></div>
             <style jsx>
@@ -228,7 +231,6 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
 
         h1{
             color: rgba(255,255,255,0.8);
-            text-shadow: 1px 1px 4rem white;
             margin: 0;
         }
 
@@ -248,7 +250,7 @@ const Main: NextPage<MainProps> = ({githubAccountData, githubSubscribe, codeWars
       `}</style>
         </>
     )
-                
+
 }
 export default Main;
 
@@ -256,11 +258,13 @@ export const MainMenu: FC = () => {
 
     const [active, setActive] = useState<string>();
     const [animateHeight, setHeight] = useState<number>(100);
+    const [menuBool, setMenuBool] = useState<boolean>(false)
+    const [confirmation, setConfirmation] = useState<boolean>(false)
 
     useEffect(() => {
-            setActive(buttons[0].name) 
+        setActive(buttons[0].name)
     }, [])
-    
+
     useEffect(() => {
         if (animateHeight >= 300) return;
         const interval = setInterval(() => {
@@ -276,17 +280,17 @@ export const MainMenu: FC = () => {
         source: '/images/github-dashboard.png',
         metadata: '',
         icon: '/logos/github.svg'
-    },{
+    }, {
         subName: '',
         name: 'LINKEDIN',
         href: 'https://www.linkedin.com/in/joe-walker-89312a22a/',
         source: '/images/linkedin-dashboard.png',
         metadata: '',
         icon: '/logos/linkedin.svg'
-    },{
+    }, {
         subName: '',
         name: 'RESUME',
-        source:'/images/resume-dashboard.png',
+        source: '/images/resume-dashboard.png',
         href: '',
         metadata: '',
         icon: '/logos/download.svg'
@@ -323,17 +327,54 @@ export const MainMenu: FC = () => {
                                 {data.name === active && data.name === buttons[0].name && <Image src={data.source} width={800} height={animateHeight} />}
                                 {/** Using state variables, useEffect and setInterval here to increment the 'animateHeight' variable from 0 - 300. 
                                  */}
-                            {data.name === active && data.name === buttons[1].name && <Image src={data.source} width={800} height={animateHeight} />}
-                            {data.name === active && data.name === buttons[2].name && <Image src={data.source} width={800} height={animateHeight} />}
+                                {data.name === active && data.name === buttons[1].name && <Image src={data.source} width={800} height={animateHeight} />}
+                                {data.name === active && data.name === buttons[2].name && <Image src={data.source} width={800} height={animateHeight} />}
                             </div>
                         </button>
                     )
                 })}
                 <button id='menu-button' className={`menu-button-false`} onClick={e => {
-                        }}><h2>Feedback</h2></button>
+                    setMenuBool(!menuBool)
+                }}><h2>Feedback</h2></button>
+                {menuBool && <PopupMenu>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                        <header className='emblem-header'>
+                            <nav>
+                            </nav>
+                            <button className='emblem-button' onClick={e => { setMenuBool(!menuBool); setConfirmation(false) }}>X</button>
+                        </header>
+                        <h1>Contact Me</h1>
+                        {!confirmation && <Form type={['firstname', 'lastname', 'email', 'hidden', 'message']} target={'sendgrid.send-email'} onResponse={e => { console.log(confirmation); setConfirmation(true) }} ></Form>}
+                        {confirmation && <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+                            <h2>Thank you for contacting me, I'll be in touch asap</h2>
+                            <button onClick={e => { setMenuBool(!menuBool); setConfirmation(false) }}>Return to app</button>
+                        </div>}
+
+                    </div>
+                </PopupMenu>}
             </div>
             <style jsx >
                 {`
+
+                .emblem-button{
+                    background-color: rgba(0,0,0,0.4);
+                    height: 100%;
+                    width: 10rem;
+                    margin: 0;
+                    border: none;
+                    color:white;
+                    fonxt-size: 30px;
+                }
+
+                .emblem-header{
+                    position: relative;
+                    display: flex;
+                    flex-direction: row;
+                    height: 3rem;
+                    width: 100%;
+                    justify-content: space-between;
+                    z-index: 10;
+                }
 
                 span{
                     display: flex;
@@ -476,7 +517,7 @@ export const MainMenu: FC = () => {
 }
 
 export const Weapons: FC = ({ }): JSX.Element => {
-    return ( 
+    return (
         <>
             <div className='weapons'>
             </div>
@@ -490,7 +531,7 @@ export const Weapons: FC = ({ }): JSX.Element => {
                     transform: translateX(100vw);
                 }`}
             </style>
-            </>
+        </>
     )
 }
 
@@ -523,7 +564,7 @@ export const Store: FC = (): JSX.Element => {
             '/images/SendGrid.svg',
             '/logos/stripe.svg'
         ]
-    },{
+    }, {
         sourceMain: '/mp4/retralink.gif',
         sourceBottom: '/mp4/retralink.gif',
         sourceMid: '/mp4/retralink.gif',
@@ -532,10 +573,10 @@ export const Store: FC = (): JSX.Element => {
         description: ``,
         href: '',
         madeWith: [
-        '/logos/react.svg',
-        '/logos/node.svg',
-        '/images/expressjs-icon.svg',
-        '/images/Solidity-Logo.wine.svg',
+            '/logos/react.svg',
+            '/logos/node.svg',
+            '/images/expressjs-icon.svg',
+            '/images/Solidity-Logo.wine.svg',
         ]
     }]
 
@@ -562,15 +603,15 @@ export const Store: FC = (): JSX.Element => {
                             href={storeOneArr[count['shopSlider']].href}
                             madeWith={storeOneArr[count['shopSlider']].madeWith}
                             onNextPrev={setIncrement} />
-                        <StoreModuleTwo data={[{image: '/images/redfoxinuss.png', href: 'redfoxinu.com', },
-                            { image: '/mp4/retralink.gif', href: 'retralink.com' },
-                            { image: '/images/beautyshop-one.png', href: ''}]} />
+                        <StoreModuleTwo data={[{ image: '/images/redfoxinuss.png', href: 'redfoxinu.com', },
+                        { image: '/mp4/retralink.gif', href: 'retralink.com' },
+                        { image: '/images/beautyshop-one.png', href: '' }]} />
                     </div>
                     {/* <div className='cyborg-image-wrapper'><Image src='/images/cyborg-crouch.png' width={400} height={600} /></div> */}
                 </div>
-                
+
             </div>
-            
+
             <style jsx>
                 {`
 
@@ -614,33 +655,34 @@ export const Settings: FC = ({ }): JSX.Element => {
 
     const elementData = [{
         title: 'graphics',
-        listItems: ['brighteness','color','quality']
-    },{
+        listItems: ['brighteness', 'color', 'quality']
+    }, {
         title: 'sound',
-        listItems: ['sound-effects','music','mute']
-    },{
+        listItems: ['sound-effects', 'music', 'mute']
+    }, {
         title: 'controls',
-        listItems: ['scroll-left','scroll-right','contact-me']
+        listItems: ['scroll-left', 'scroll-right', 'contact-me']
     }]
 
-    return ( 
+    return (
         <>
             <div className='settings'>
                 <div className='main-container'>
                     {elementData.map((data) => {
                         return (
-                            <div style={{width: `${100 / elementData.length}%`}}>
+                            <div style={{ width: `${100 / elementData.length}%` }}>
                                 <h1>{data.title}</h1>
                                 <ul>
                                     {data.listItems.map((listData) => {
                                         return (
                                             <li><p>{listData}</p></li>
-                                    )})}
+                                        )
+                                    })}
                                 </ul>
-                                </div>
+                            </div>
                         )
                     })}
-                    </div>
+                </div>
             </div>
             <style jsx>
                 {`
@@ -648,8 +690,8 @@ export const Settings: FC = ({ }): JSX.Element => {
                 .main-container{
                     display: flex;
                     flex-direction: row;
-                    height: 90%;
-                    width: 70%;
+                    height: 95%;
+                    width: 95%;
                     padding: 5rem 7rem;
                     background-color: rgba(0,0,0,0.3);
                     box-shadow: 0 0 10rem 3rem rgba(0,0,0,0.8);
@@ -686,7 +728,7 @@ export const Settings: FC = ({ }): JSX.Element => {
                         box-shadow: 0 0 10rem 3rem rgba(0,0,0,0.8);
                 }`}
             </style>
-            </>
+        </>
     )
 }
 
