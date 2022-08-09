@@ -14,7 +14,7 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
     const [queryEmblem, setQueryEmblem] = useState<string>('')
     const [mousePositionX, setMousePositionX] = useState(0);
     const [mousePositionY, setMousePositionY] = useState(0);
-    
+
     const source = [
         '/logos/react.svg',
         '/logos/node.svg',
@@ -63,8 +63,9 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
     useEffect(() => {
         window.addEventListener('mousemove', (e) => {
             setMousePositionX(e.clientX);
-            setMousePositionY(e.clientY)})
-    },[mousePositionY, setMousePositionY,mousePositionX, setMousePositionX,queryEmblem, setQueryEmblem])
+            setMousePositionY(e.clientY)
+        })
+    }, [mousePositionY, setMousePositionY, mousePositionX, setMousePositionX, queryEmblem, setQueryEmblem])
 
     const closeMenu = useCallback((e: MouseEvent) => {
         onCloseMenu(e);
@@ -78,32 +79,28 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
         <>
             {bool &&
                 <>
-                    <div className='main'>
-                        <header className='emblem-header'>
-                            <nav>
-                                <span className={`category-${emblemType===0}`} onClick={e => setEmblemType(0)}><h4>Frontend</h4></span>
-                                <span className={`category-${emblemType===1}`} onClick={e => setEmblemType(1)}><h4>Backend</h4></span>
-                                <span className={`category-${emblemType===2}`} onClick={e => setEmblemType(2)}><h4>Other</h4></span>
-                            </nav>
-                            <button onClick={closeMenu}>X</button>
-                        </header>
-                         <div className='frontend-container'>
-                        {emblems.map(({source, description, type}) => {
-                                return (
+                    <header className='emblem-header'>
+                        <nav>
+                            <span className={`category-${emblemType === 0}`} onClick={e => setEmblemType(0)}><h4>Frontend</h4></span>
+                            <span className={`category-${emblemType === 1}`} onClick={e => setEmblemType(1)}><h4>Backend</h4></span>
+                            <span className={`category-${emblemType === 2}`} onClick={e => setEmblemType(2)}><h4>Other</h4></span>
+                        </nav>
+                        <button onClick={closeMenu}>X</button>
+                    </header>
+                    <div className='frontend-container'>
+                        {emblems.map(({ source, description, type }) => {
+                            return (
                                 <>
-                                   {emblemType === type && <button className='emblem-button'title='clicking this changes your emblem' onClick={e => { changeEmblem(source); closeMenu(e)}}>
-                                        <Image src={source} height={100} width={100} onMouseEnter={e => setQueryEmblem(description)} onMouseLeave={e => setQueryEmblem('')}/>
+                                    {emblemType === type && <button className='emblem-button' title='clicking this changes your emblem' onClick={e => { changeEmblem(source); closeMenu(e) }}>
+                                        <Image src={source} height={100} width={100} onMouseEnter={e => setQueryEmblem(description)} onMouseLeave={e => setQueryEmblem('')} />
                                     </button>}
-                                    </>
-                                )
+                                </>
+                            )
                         })}
-                        {queryEmblem !== '' && <div className='inspect-emblem' style={{left: mousePositionX-200, top: mousePositionY-200}}><h2>{queryEmblem}</h2></div>}
-                        </div>
-                </div>
-                
-                    <div className='overlay'></div>
+                        {queryEmblem !== '' && <div className='inspect-emblem' style={{ left: mousePositionX - 200, top: mousePositionY - 200 }}><h2>{queryEmblem}</h2></div>}
+                    </div>
                 </>
-            }    <style jsx>
+            }   <style jsx>
                 {`
                 
                 .inspect-emblem{
@@ -132,11 +129,13 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
                     cursor: pointer;
                 }
                 .emblem-header{
+                    position: relative;
                     display: flex;
                     flex-direction: row;
                     height: 3rem;
                     width: 100%;
                     justify-content: space-between;
+                    z-index: 10;
                 }
 
                 .category-false{
@@ -176,28 +175,6 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
                     border: none;
                     cursor: pointer;
                 }
-                .overlay{
-                    top: 0;
-                    left: 0;
-                    display: flex;
-                    position: absolute;
-                    width: 100vw;
-                    height: 100vh;
-                    background-color: rgba(0,0,0,0.8);
-                    z-index: 6;
-                    animation: fade 1s;
-                }
-                .main{
-                    display: flex;
-                    flex-direction: column;
-                    position: absolute;
-                    width: 80vw;
-                    height: 70vh;
-                    top: 15vh;
-                    left: 10vw;
-                    background-color: rgba(30,32,38,1);
-                    z-index: 7;
-                }
 
                 @keyframes fade {
                     from {opacity: 0}
@@ -207,6 +184,6 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
             </style>
         </>
     );
-}
+};
 
 export default EmblemMenu;
