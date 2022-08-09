@@ -4,7 +4,7 @@ import Header from "./header";
 interface LayoutProps {
     children: JSX.Element;
     innerWidthProp: number;
-    onLinkClick: (text:number) => void;
+    onLinkClick: (text:number, title: string) => void;
 }
 
 const Layout: FC<LayoutProps> = ({ children, onLinkClick, innerWidthProp }): JSX.Element => {
