@@ -3,6 +3,7 @@ import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from "
 import { useHandleSetBool } from "../hooks/setBooleanValues";
 import { useIncrementData } from "../hooks/setCounter";
 import { isNull, isUndefined } from "../pages/main";
+import Slider from "./slider";
 
 export interface GithubAccountData {
     login: string;
@@ -29,13 +30,13 @@ export interface GithubProps {
 }
 
 export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, onOpenEmblemMenu, activeEmblem }): JSX.Element => {
-    
+
     const [count, setCount, setIncrement] = useIncrementData();
     const [loading, setLoading] = useState(true);
     const [bool, setBool] = useHandleSetBool();
 
     //TODO fix delay in RepoValues / Commit counts
-    
+
     useEffect(() => {
         setCount('iterateRepoValues', 1)
         if (!isNull(githubAccountData)) return;
@@ -44,7 +45,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             getCommitData(githubAccountData, githubSubscribe);
         }, 100)
     }, [])
-    
+
     useEffect(() => {
         const interval = setInterval(() => {
             if (!isNull(githubAccountData)) return;
@@ -52,26 +53,26 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             setTimeout(() => {
                 getCommitData(githubAccountData, githubSubscribe);
             }, 100)
-           setIncrement(2, 'iteratePValues', true);
+            setIncrement(2, 'iteratePValues', true);
         }, 8000)
         return () => clearInterval(interval)
-    }, [count,setCount])
+    }, [count, setCount])
 
 
-    const openEmblemMenu = useCallback(async() => {
+    const openEmblemMenu = useCallback(async () => {
         return onOpenEmblemMenu('openEmblemMenu');
     }, [])
 
     const getCommitData = async (data: object | null | undefined, subs: object | null | undefined) => {
 
-            const arr = [data, subs];
-            for (let v in arr) { if (!isNull(arr[v]) || !isUndefined(arr[v])) return setLoading(false) }
-            const res = await fetch(`https://api.github.com/repos/riectivnoodes/${subs[count['iterateRepoValues'] !== undefined ? count['iterateRepoValues'] : 0].name}/commits`);
-            const updateData = await res.json();
-            return [setCount('repos', updateData.length), setLoading(false), updateData]
-       
+        const arr = [data, subs];
+        for (let v in arr) { if (!isNull(arr[v]) || !isUndefined(arr[v])) return setLoading(false) }
+        const res = await fetch(`https://api.github.com/repos/riectivnoodes/${subs[count['iterateRepoValues'] !== undefined ? count['iterateRepoValues'] : 0].name}/commits`);
+        const updateData = await res.json();
+        return [setCount('repos', updateData.length), setLoading(false), updateData]
+
     }
-    
+
     const idPText = [
         `Current repos ${githubAccountData !== null ? githubAccountData.public_repos : null} ...`,
         `Working on node ${githubAccountData !== null ? githubAccountData.node_id : null} ...`,
@@ -81,22 +82,25 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
     if (count['iterateRepoValues'] === undefined) return
     return (
         <>
+
             <div className='main'>
-                {bool['hover'] && <div className='edit-image-container'><div onMouseLeave={e => setBool('hover')} onClick={openEmblemMenu} className='edit-image'>
+                {bool['hover'] && <div className='edit-image-container'>
+                    <div onMouseLeave={e => setBool('hover')} onClick={openEmblemMenu} className='edit-image'>
                         <h1>!</h1>
-                    </div></div>}
+                    </div>
+                </div>}
+                {/* ^ emblem button overlay  */}
+
+
                 <span className='main-span' >
-                    <span id={`${bool['hover']}`} className='emblem-container'>
-                        {activeEmblem === undefined && <Image src={'/logos/react.svg'} height={100} width={110} onMouseOver={e => setBool('hover')} />}
-                        {activeEmblem !== undefined &&<Image src={`${activeEmblem}`}   height={100} width={110} onMouseOver={e => setBool('hover')} />}
-                    </span>
+                    <div id={`${bool['hover']}`} className='emblem-container'>
+                        <Image src={`${activeEmblem}`} height={100} width={110} onMouseOver={e => setBool('hover')} />
+                    </div>
+                    {/* ^ emblem button */}
+
                     <span className='id-span' id='id-span-id'>
                         <h3>[jw]{githubAccountData !== null ? githubAccountData.login : 'Joseph Walker'}</h3>
-                        <div className='slider-container'>
-                            <div className='slider-wrapper'>
-                                <div className="slider" />
-                            </div>
-                        </div>
+                        <Slider length={'80%'} />
                         {!loading &&
                             <>
                                 <span className='todo'>
@@ -104,15 +108,21 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                                         Sorry, your browser does not support inline SVG. </svg>
                                     <p>{idPText[count['iteratePValues']]}</p>
                                 </span>
-                                {githubAccountData === null && <p>no data to show</p>}
                             </>
-                        } 
+                        }
                     </span>
+                    {/* ^ contains text/slider elements, loading refers to github data fetching - see top of page */}
                 </span>
-                {bool['githubData'] && <div className='alert-rate-limit'>
-                    <span className='hide-alert' ><p>you have been rate limited by github. Data from github will not show</p><button
-                        onClick={e => setBool('githubData')} className='alert-button'>X</button></span>
-                </div>}
+
+
+                {bool['githubData'] &&
+                    <div className='alert-rate-limit'>
+                        <span className='hide-alert' >
+                            <button onClick={e => setBool('githubData')} className='alert-button'>X</button>
+                            <p>you have been rate limited by github. Data from github will not show</p>
+                        </span>
+                    </div>}
+
                 {loading && !bool['githubData'] &&
                     <>
                         <div className='spinner'>
@@ -120,25 +130,46 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                         </div>
                         <h4 id='spinner-text'>Github Pending...</h4>
                     </>}
-                <>
-                    {githubAccountData !== null && <div className='github-stats-container'>
-                        <span id='repo' className='github-span'>{githubAccountData !== null ?
-                            <span  className='github-data'>
-                                <h4>Repo </h4>
-                                {githubSubscribe !== null && <h1>{githubSubscribe[count['iterateRepoValues']].name}</h1>}
-                            </span>
-                            : ''}</span>
-                        <span id='commit' className='github-span'>{githubAccountData !== null || count['repos'] !== undefined ?
-                            <span className='github-data'>
-                                <h4>Commits </h4>
-                                <h1>{count['repos']}</h1>
-                            </span> : ''}</span>
-                        
-                    </div>}
-                </>
+                {/* displays spinner and loading text if user is rate limited */}
+
+                {githubAccountData !== null && <div className='github-stats-container'>
+                    <span id='repo' className='github-span'>
+                        <span className='github-data'>
+                            <h4>Repo </h4>
+                            {githubSubscribe !== null && <h1>{githubSubscribe[count['iterateRepoValues']].name}</h1>}
+                        </span>
+                    </span>
+                    {/* displays github repo names */}
+
+                    <span id='commit' className='github-span'>
+                        <span className='github-data'>
+                            <h4>Commits </h4>
+                            <h1>{`${count['repos']}${count['repos'] > 29 ? '+' : ''}`}</h1>
+                        </span>
+                    </span>
+                    {/* displays commits */}
+
+                </div>}
 
             </div>
             <style jsx>{`
+
+            .alert-button{
+                background-color: rgba(0,0,0,0.5);
+                border: none;
+                width: 5rem;
+                height: 2rem;
+                color: white;
+                z-index: 100;
+            }
+
+            .alert-button:hover {
+                background-color: rgba(255,255,255,0.5);
+                border: none;
+                width: 5rem;
+                color: white;
+                cursor: pointer;
+            }
 
             p{
                 color: white;
@@ -212,6 +243,9 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             .hide-alert{
                 animation: reveal 0.5s;
                 border: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
             .alert-rate-limit{
                 animation: slidefromright 0.5s ease-in 0.5s;
@@ -245,27 +279,6 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                 align-items: center;
                 color: white;
                 cursor: pointer;
-            }
-
-
-            .slider-container{
-                width: 100%;
-                height: 0.6rem;
-                background-image: linear-gradient(rgba(200,200,200,0.3), rgba(200,200,200,0.05));
-            }
-
-            .slider-wrapper{
-                animation: reveal 1s;
-                border: none;
-                height: 0.6rem;
-            }
-            .slider{
-                position: relative;
-                width: 90%;
-                height: inherit;
-                background-color: rgba(255,255,255,0.8);
-                animation: expandslider 1s ease-in 1s;
-                border: none;
             }
 
             #id-span-id{
@@ -317,15 +330,6 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             to {
                 opacity: 100%;
                 transform: translateY(0px);
-            }
-        }
-
-        @keyframes expandslider {
-            from {
-                width: 0px;
-            }
-            to {
-                width: 90%;
             }
         }
 
