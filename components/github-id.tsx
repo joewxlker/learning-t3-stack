@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from "react";
 import { useHandleSetBool } from "../hooks/setBooleanValues";
 import { useIncrementData } from "../hooks/setCounter";
-import { isNull, isUndefined } from "../pages/main";
+import { isNull, isUndefined } from "../util/isNullUndefiend";
 import Slider from "./slider";
 
 export interface GithubAccountData {
@@ -159,15 +159,10 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                 border: none;
                 width: 5rem;
                 height: 2rem;
-                color: white;
-                z-index: 100;
             }
 
             .alert-button:hover {
                 background-color: rgba(255,255,255,0.5);
-                border: none;
-                width: 5rem;
-                color: white;
                 cursor: pointer;
             }
 
