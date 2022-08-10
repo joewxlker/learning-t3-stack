@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-export default function Home():JSX.Element {
+export default function Home(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [mobile, setMobile] = useState(false);
 
@@ -23,22 +23,22 @@ export default function Home():JSX.Element {
 
   return (
     <>
-    <Head>
+      <Head>
         <title></title>
       </Head>
       <div className="wrapper" style={{ width: '100vw', maxHeight: '100vh' }}>
         <div className='container'>
-            {/** Components go here */}
+          {/** Components go here */}
           <div className='name'><h3>Joseph Walker</h3></div>
           <span className='bottom-span'>
             <div className='spinner'></div>
-            <h2 style={{textAlign: 'center'}}>Tips...</h2>
+            <h2 style={{ textAlign: 'center' }}>Tips...</h2>
           </span>
           {mobile && <h2>Loading mobile UI</h2>}
         </div>
-        
+
         <Image className='background-image' src='/images/cyborg.jpeg' alt='' layout='fill'></Image>
-      
+
         <style jsx>{`
 
         .background_image{
@@ -102,7 +102,7 @@ export default function Home():JSX.Element {
         }
       `}</style>
 
-      <style jsx global>{`
+        <style jsx global>{`
         html,
         body {
           background-image: linear-gradient(rgba(10,10,10,1), rgba(100,100,100,1))
@@ -118,6 +118,6 @@ export default function Home():JSX.Element {
 
       `}</style>
       </div>
-      </>
+    </>
   )
 }
