@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { Dispatch, FC, FunctionComponent, SetStateAction, useCallback, useState} from "react";
+import React, { Dispatch, FC, FunctionComponent, SetStateAction, useCallback, useState } from "react";
 
 export interface NavLinkProps extends HeaderProps {
     title: string;
@@ -9,7 +9,7 @@ export interface NavLinkProps extends HeaderProps {
     theme: string;
 }
 
-export interface HeaderProps{
+export interface HeaderProps {
     innerWidthProp: number;
     onLinkClick: (text: number, title: string) => void;
 }
@@ -33,21 +33,21 @@ const Header: FunctionComponent<HeaderProps> = ({ onLinkClick, innerWidthProp })
                 onLinkClick={onLinkClick}
                 setActiveLink={setActive}
                 activeLink={isActive}
-                theme={''}/>
+                theme={''} />
             <NavLinks
                 title={'STORE'}
                 innerWidthProp={(innerWidthProp) * 2}
                 onLinkClick={onLinkClick}
                 setActiveLink={setActive}
                 activeLink={isActive}
-                theme={'shop'}/>
-                        <NavLinks
+                theme={'shop'} />
+            <NavLinks
                 title={'SETTINGS'}
                 innerWidthProp={(innerWidthProp) * 3}
                 onLinkClick={onLinkClick}
                 setActiveLink={setActive}
                 activeLink={isActive}
-                theme={''}/>
+                theme={''} />
             <style jsx>{`
         .header-container{
             position: fixed;
@@ -66,19 +66,51 @@ const Header: FunctionComponent<HeaderProps> = ({ onLinkClick, innerWidthProp })
 }
 export default Header;
 
-export const NavLinks: FC<NavLinkProps> = ({innerWidthProp, title, onLinkClick, setActiveLink, activeLink, theme}): JSX.Element => {
+export const NavLinks: FC<NavLinkProps> = ({ innerWidthProp, title, onLinkClick, setActiveLink, activeLink, theme }): JSX.Element => {
 
     const handleClick = useCallback(() => {
-        onLinkClick(innerWidthProp,title);
+        onLinkClick(innerWidthProp, title);
         setActiveLink(title);
     }, [onLinkClick])
-    
+
     return (
         <>
-            {activeLink === title && theme === '' && <span className='link-span' onClick={handleClick}><a className='active' ><h4>{title}</h4></a><div id='expand'><Image src='/ui-elements/spinner-orange.svg' width={20} height={20}/></div></span>}
-            {activeLink !== title && theme === '' && <span className='' onClick={handleClick}><a className='' ><h4>{title}</h4></a><div id='expand'><Image src='/ui-elements/spinner-black.svg' width={20} height={20}/></div></span>}
-            {activeLink === title && theme !== '' && <span className={`${theme}-active`} onClick={handleClick}><a className='active' ><h4>{title}</h4></a><div id='expand'><Image src='/ui-elements/spinner-blue.svg' width={20} height={20}/></div></span>}
-            {activeLink !== title && theme !== '' && <span className={theme} onClick={handleClick}><a className='' ><h4>{title}</h4></a><div id='expand'><Image src='/ui-elements/spinner-blue.svg' width={20} height={20}/></div></span>}
+            {activeLink === title && theme === '' &&
+                <span className='link-span' onClick={handleClick}>
+                    <a className='active' >
+                        <h4>{title}</h4>
+                    </a>
+                    <div id='expand'>
+                        <Image src='/ui-elements/spinner-orange.svg' width={20} height={20} />
+                    </div>
+                </span>}
+            {activeLink !== title && theme === '' &&
+                <span className='' onClick={handleClick}>
+                    <a className='' >
+                        <h4>{title}</h4>
+                    </a>
+                    <div id='expand'>
+                        <Image src='/ui-elements/spinner-black.svg' width={20} height={20} />
+                    </div>
+                </span>}
+            {activeLink === title && theme !== '' &&
+                <span className={`${theme}-active`} onClick={handleClick}>
+                    <a className='active' >
+                        <h4>{title}</h4>
+                    </a>
+                    <div id='expand'>
+                        <Image src='/ui-elements/spinner-blue.svg' width={20} height={20} />
+                    </div>
+                </span>}
+            {activeLink !== title && theme !== '' &&
+                <span className={theme} onClick={handleClick}>
+                    <a className='' >
+                        <h4>{title}</h4>
+                    </a>
+                    <div id='expand'>
+                        <Image src='/ui-elements/spinner-blue.svg' width={20} height={20} />
+                    </div>
+                </span>}
             <style jsx>{`
         span{
             cursor: pointer;
