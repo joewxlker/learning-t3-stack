@@ -101,6 +101,7 @@ const Main: NextPage<MainProps> = ({ githubAccountData, githubSubscribe, codeWar
             <style jsx>
                 {`
 
+
                 .user-data-container{
                     box-shadow: 0 0 4rem 3rem rgba(0,0,0,0.7);
                     background-color: rgba(0,0,0,0.65);
@@ -206,6 +207,11 @@ const Main: NextPage<MainProps> = ({ githubAccountData, githubSubscribe, codeWar
                 `}
             </style>
             <style jsx global>{`
+            
+            button {
+                cursor: pointer;
+            }
+            
         html,
         body {
             overflow: hidden;
