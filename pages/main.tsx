@@ -1,26 +1,24 @@
-import { GetServerSideProps, GetStaticProps, NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head';
 import Image from 'next/image';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import CodeWars, { CodeWarsData } from '../components/code-wars';
 import EmblemMenu from '../components/emblems';
 import { Form } from '../components/form';
 import { GithubAccountData, GithubSubscribe, IdCard } from '../components/github-id';
 import Layout from '../components/layout'
 import PopupMenu from '../components/popup';
+import Slider from '../components/slider';
 import { StoreModuleOne, StoreModuleTwo } from '../components/store-modules';
 import { useHandleSetBool } from '../hooks/setBooleanValues';
 import { useIncrementData } from '../hooks/setCounter';
-import { sendgrid } from '../server/api\'s/all';
+import { isUndefined } from '../util/isNullUndefiend';
 
-export interface MainProps {
+interface MainProps {
     githubAccountData: GithubAccountData | null;
     githubSubscribe: GithubSubscribe | null;
     codeWarsData: CodeWarsData | null;
 }
-
-export const isNull = (value: any | null) => { if (value === null) { return false } return true }
-export const isUndefined = (value: any | null) => { if (value === undefined) { return false } return true }
 
 export const getServerSideProps: GetServerSideProps = async () => {
 
@@ -44,6 +42,7 @@ const Main: NextPage<MainProps> = ({ githubAccountData, githubSubscribe, codeWar
     const [bgPosition, setBgPosition] = useState<number>();
     const [bool, setBool] = useHandleSetBool();
     const [activeEmblem, setActiveEmblem] = useState<string>('/logos/react.svg');
+    const [activeUi, setActiveUi] = useState();
     const background = useRef<HTMLDivElement>();
 
     const updateWidth = () => setInnerWidthProp(window.innerWidth)
@@ -53,8 +52,8 @@ const Main: NextPage<MainProps> = ({ githubAccountData, githubSubscribe, codeWar
         updateWidth()
         return () => window.removeEventListener('resize', updateWidth)
     }, [innerWidthProp, setInnerWidthProp])
-    //This useEffect updates the inner width value
-    //the inner width value is passed to the child components
+    // This useEffect updates the inner width value
+    // the inner width value is passed to the child components
 
     const handleLinkClick = (props: number, title: string) => {
         window.scrollTo(props, 0);
@@ -89,15 +88,25 @@ const Main: NextPage<MainProps> = ({ githubAccountData, githubSubscribe, codeWar
                         <MainMenu />
                     </div>
 
-                    <div className='overlay' style={{ backgroundColor: `rgba(0,0,0, 0.${negBrighteness})` }}>
-                        <div className='overlay' style={{ backgroundColor: `rgba(255,255,255, 0.${posBrighteness})` }}></div>
-                        <Weapons />
+                    <div className='overlay'>
+                        <div className='overlay' style={{ backgroundColor: `rgba(0,0,0, 1)`, opacity: `${negBrighteness / 8}` }} />
+                        <div className='overlay' style={{ backgroundColor: `rgba(255,255,255, 1)`, opacity: `${posBrighteness / 8}` }}></div>
+                        <Stats onUiUpdate={(ui) => { setActiveUi(ui) }}>
+                            <>
+                                {activeUi === 'github' && <StatModules data={githubAccountData} />}
+                                {activeUi === 'sololearn' && <StatModules data={codeWarsData} />}
+                                {activeUi === 'codewars' && <StatModules data={codeWarsData} />}
+                            </>
+                        </Stats>
                         <Store />
-                        <Settings />
+                        <Settings onSliderChange={(arg0, arg1) => {
+                            if (arg0 == 'brightness' && (parseInt(arg1) / 40) - 5 < 0) return setNegBrightness((((parseInt(arg1) / 40) - 5)) * ((parseInt(arg1) / 40) - 5));
+                            else if (arg0 == 'brightness') return setPosBrightness((((parseInt(arg1) / 40) - 5)))
+                        }} />
                     </div>
                 </>
             </Layout>
-            <div id={windowPosition} className={`video-container  ${bgAnimation} ${windowPosition}`} ref={background}></div>
+            <div id={windowPosition} className={`video-container  ${bgAnimation} ${windowPosition}`}></div>
             <style jsx>
                 {`
 
@@ -320,6 +329,10 @@ export const MainMenu: FC = () => {
                             </div>}
                             <div className='overlay-wrapper'>
                                 {/** wrapper div here to set height 0px*/}
+
+                            </div>
+                            <div className='animation-helper' style={{ backgroundImage: `url(${data.source})` }}>
+                                {/** 'helper' div here to target image height and animations as next Image doesnt allow image styling directly */}
                                 {data.name === active && <div className='overlay' onClick={e => window.open(data.href)}>
                                     {/** nested overlay div positioned relativeley, 
                                      * the wrapper allows this to have any size while 
@@ -327,14 +340,6 @@ export const MainMenu: FC = () => {
                                      * effecting the flow of the page */}
                                     <span><Image src={data.icon} width={50} height={50} /><h2>{data.name}</h2></span>
                                 </div>}
-                            </div>
-                            <div className='animation-helper'>
-                                {/** 'helper' div here to target image height and animations as next Image doesnt allow image styling directly */}
-                                {data.name === active && data.name === buttons[0].name && <Image src={data.source} width={800} height={animateHeight} />}
-                                {/** Using state variables, useEffect and setInterval here to increment the 'animateHeight' variable from 0 - 300. 
-                                 */}
-                                {data.name === active && data.name === buttons[1].name && <Image src={data.source} width={800} height={animateHeight} />}
-                                {data.name === active && data.name === buttons[2].name && <Image src={data.source} width={800} height={animateHeight} />}
                             </div>
                         </button>
                     )
@@ -362,21 +367,10 @@ export const MainMenu: FC = () => {
             <style jsx >
                 {`
 
-                .emblem-button{
-                    background-color: rgba(0,0,0,0.4);
-                    height: 100%;
-                    width: 10rem;
-                    margin: 0;
-                    border: none;
-                    color:white;
-                    fonxt-size: 30px;
-                }
-
                 .emblem-header{
                     position: relative;
                     display: flex;
                     flex-direction: row;
-                    height: 3rem;
                     width: 100%;
                     justify-content: space-between;
                     z-index: 10;
@@ -387,7 +381,6 @@ export const MainMenu: FC = () => {
                     flex-direction: row;
                     justify-content: space-between;
                     align-items: center;
-                    height: 100%;
                     width: 50%;
                 }
                 .metadata{
@@ -402,10 +395,14 @@ export const MainMenu: FC = () => {
                 }
 
                 .animation-helper {
+                    display: flex;
+                    position: relative;
                     height: 30vh;
                     top: 0;
-                    object-fit: cover;
-                                }
+                    background-position: center;
+                    filter: blur(3px;);
+                    align-items: flex-end;
+                }
 
                 .overlay-wrapper{
                     top: 11rem;
@@ -413,6 +410,8 @@ export const MainMenu: FC = () => {
                     height: 0px;
                 }
                 .overlay{
+                    bottom: 0px;
+                    height: 11vh;
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
@@ -423,11 +422,14 @@ export const MainMenu: FC = () => {
                     box-shadow: inset 0rem 5rem 6rem 0.01rem black;
                     color: rgb(50,50,50);
                     z-index: 5;
-                    height: 5.5rem;
                     width: 100%;
                     border-bottom: solid 10px orange;
                     cursor: pointer;
                     animation: fadein 1s;
+                }
+
+                .overlay:hover{
+                    color:white;
                 }
 
                 .text-overlay{
@@ -462,7 +464,7 @@ export const MainMenu: FC = () => {
                     justify-content: center;
                     align-items: center;
                     width: 100%;
-                    height: 5rem;
+                    height: 10vh;
                     background-color: rgba(200,200,200, 0.1);
                     border: 2px solid  rgba(200,200,200, 0.3);
                     color: white;
@@ -484,7 +486,6 @@ export const MainMenu: FC = () => {
                 .menu-button-container{
                     width: 27vw;
                     color: white;
-                    height: 70vh;
                     display: flex;
                     flex-direction: column;
                     box-shadow: 0 0 5rem 3rem rgba(0,0,0,0.5);
@@ -522,16 +523,123 @@ export const MainMenu: FC = () => {
     )
 }
 
-export const Weapons: FC = ({ }): JSX.Element => {
+interface StatModulesProps {
+    data: object;
+}
+export const StatModules: FC<StatModulesProps> = ({ data }): JSX.Element => {
+
+    useEffect(() => {
+        console.log(data)
+    })
+
     return (
         <>
-            <div className='weapons'>
+            <div style={{}}>
+                <h1>{data.login ? 'GITHUB STATS' : 'CODEWARS STATS'}</h1>
+                <h1>{data.login ? data.login : data.username}</h1>
+                <h1>{data.login ? 'github id ' : 'codewars id '}{data.id}</h1>
+            </div>
+            <div className='module-one'>
+                {data.login ? <div>render github commit widget thing here</div> : <></>}
+            </div>
+            <div className='module-container'>
+                <div className='module-two'></div>
+                <div className='module-three'></div>
             </div>
             <style jsx>
                 {`
-                .weapons{
-                    top: 10vh;
-                    height: 90vh;
+                .module-container {
+                    height: 60%;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                }
+                .module-one{
+                    height: 40%;
+                    width: 100%;
+                background-color: rgba(200,200,200, 0.1);
+                border: 2px solid  rgba(200,200,200, 0.5);
+                box-shadow: 0rem 0rem 1rem 0.01rem rgba(0,0,0, 0.2);
+                }
+                .module-two{
+                    width: 30%;
+                    height: 50%;
+                    margin: 2% 0 ;
+                background-color: rgba(200,200,200, 0.1);
+                border: 2px solid  rgba(200,200,200, 0.5);
+                box-shadow: 0rem 0rem 1rem 0.01rem rgba(0,0,0, 0.2);
+                }
+                .module-three{
+                    width: 70%;
+                    height: 50%;
+                    margin: 2% 0 0% 2%;
+                background-color: rgba(200,200,200, 0.1);
+                border: 2px solid  rgba(200,200,200, 0.5);
+                box-shadow: 0rem 0rem 1rem 0.01rem rgba(0,0,0, 0.2);
+                }
+                `}
+            </style>
+        </>
+    )
+}
+
+
+interface StatsProps {
+    children: JSX.Element;
+    onUiUpdate: (props: any) => void;
+}
+
+export const Stats: FC<StatsProps> = ({ children, onUiUpdate }): JSX.Element => {
+
+
+    const onCallback = useCallback((ui: string) => {
+        onUiUpdate(ui)
+    }, [onUiUpdate]);
+
+    return (
+        <>
+            <div className='Stats'>
+                <div className='sidebar'>
+                    <button onClick={e => { onCallback('github'); }}>GITHUB</button>
+                    <button onClick={e => { onCallback('codewars'); }}>CODEWARS</button>
+                </div>
+                <div style={{ padding: '2.5vh 2.5vw ' }}>
+                    <div className='main'>
+                        {children}
+                    </div>
+                </div>
+            </div>
+            <style jsx>
+                {`
+
+                button{
+                    height: 3rem;
+                    width: 100%;
+                    background-color: white;
+                    margin: 1%;
+                }
+                .main {
+                    width: 80vw;
+                    height: 87vh;
+                    flex-direction: column;
+                }
+                .sidebar {
+                    display: flex;
+                    position: relative;
+                    flex-direction: column;
+                    width: 15vw;
+                    background-image: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.2) );
+                    box-shadow: 0rem 0rem 1rem 0.01rem rgba(0,0,0, 0.2);
+                    padding: 1rem;
+                    margin: 0rem;
+                    border-right: 2px solid rgba(255,255,255,0.5);
+                }
+                .Stats{
+                    display:flex;
+                    flex-direction: row;
+                    top: 8.2vh;
+                    height: 91.8vh;
+                    margin: 0px;
                     width: 100vw;
                     position: relative;
                     transform: translateX(100vw);
@@ -657,18 +765,31 @@ export const Store: FC = (): JSX.Element => {
     )
 }
 
-export const Settings: FC = ({ }): JSX.Element => {
+interface SettingsProps {
+    onSliderChange: (arg0: string, arg1: string) => void;
+}
+
+export const Settings: FC<SettingsProps> = ({ onSliderChange }): JSX.Element => {
+
+    const [mouseDown, setMouseDown] = useState<boolean>(false)
+    const [width, setWidth] = useState<number>();
+    const [xpos, setXpos] = useState({ 'brightness': 220, 'sound': 1 });
+
+    useEffect(() => {
+        setWidth(window.innerWidth)
+    })
 
     const elementData = [{
         title: 'graphics',
-        listItems: ['brighteness', 'color', 'quality']
+        slider: [{ title: 'Brightness', sliderPos: `${xpos['brightness']}px`, type: 'brightness', amount: width * 0.1 }]
     }, {
         title: 'sound',
-        listItems: ['sound-effects', 'music', 'mute']
-    }, {
-        title: 'controls',
-        listItems: ['scroll-left', 'scroll-right', 'contact-me']
-    }]
+        slider: [{ title: 'Audio', sliderPos: `${xpos['sound']}px`, type: 'sound', amount: width * 0.5 }]
+    },]
+
+    const setSlidersCallback = useCallback((type: string) => {
+        onSliderChange(type, `${xpos[type]}`)
+    }, [xpos, setXpos, onSliderChange])
 
     return (
         <>
@@ -676,12 +797,32 @@ export const Settings: FC = ({ }): JSX.Element => {
                 <div className='main-container'>
                     {elementData.map((data) => {
                         return (
-                            <div style={{ width: `${100 / elementData.length}%` }}>
+                            <div style={{ width: `${width / 4}%` }}>
                                 <h1>{data.title}</h1>
                                 <ul>
-                                    {data.listItems.map((listData) => {
+                                    {data.slider !== undefined && data.slider.map((listData) => {
                                         return (
-                                            <li><p>{listData}</p></li>
+                                            <li className='list-item'>
+                                                <h3>{listData.title}</h3>
+                                                <Slider length={listData.sliderPos} />
+                                                <button
+                                                    draggable={true}
+                                                    className='slider-button'
+                                                    style={{ transform: `translate(${listData.sliderPos}, -2.38vh)` }}
+                                                    onMouseDown={(e) => { setMouseDown(true) }}
+                                                    onMouseMove={(e) => {
+                                                        if (!mouseDown) return
+                                                        if (e.clientX - listData.amount + 180! > 600) return
+                                                        if (e.clientX - 100 < 100) return
+                                                        setXpos((prev) => {
+
+                                                            setSlidersCallback(listData.type)
+                                                            return { ...prev, [`${listData.type}`]: e.clientX - listData.amount }
+                                                        })
+                                                    }}
+                                                    onMouseUp={e => setMouseDown(false)}
+                                                ></button>
+                                            </li>
                                         )
                                     })}
                                 </ul>
@@ -692,6 +833,19 @@ export const Settings: FC = ({ }): JSX.Element => {
             </div>
             <style jsx>
                 {`
+                .list-item{
+                    width: 25vw;
+                }
+
+                .slider-button{
+                    transform: translateY(-2.4vh);
+                    display: absolute;
+                    background-color: orange;
+                    border: none;
+                    height: 0.6rem;
+                    width: 3.3rem;
+                    box-shadow: 0.5rem 0.5rem 0.5rem 0.1rem rgba(0 , 0, 0, 0.2);
+                }
 
                 .main-container{
                     display: flex;
