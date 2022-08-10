@@ -1,0 +1,2 @@
+export const isNull = (value: any | null) => { if (value === null) { return false } return true }
+export const isUndefined = (value: any | null) => { if (value === undefined) { return false } return true }
