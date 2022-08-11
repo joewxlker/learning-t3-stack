@@ -9,24 +9,33 @@ export interface CodeWarsStats {
     color: string;
     score: number;
 }
+
+export interface ChallengeData {
+    id: string;
+    name: string;
+    slug: string;
+    completedLanguages: Array<string>;
+    completedAt: string;
+}
+
 export interface RankObj {
     overall: CodeWarsStats;
     languages: CodeWarsLanguages;
 }
 export interface CodeWarsData {
-    id: string;
-    username: string;
-    name: string;
-    honor: number;
-    leaderboardPosition: number | null;
-    ranks: RankObj;
-    codeChallenges: object;
+    id?: string;
+    username?: string;
+    name?: string;
+    honor?: number;
+    leaderboardPosition?: number | null;
+    ranks?: RankObj;
+    data?: Array<ChallengeData>;
 }
 export interface CodeWarsProps {
     data: CodeWarsData;
 }
 
-const CodeWars: FC<CodeWarsProps> = ({data}): JSX.Element => {
+const CodeWars: FC<CodeWarsProps> = ({ data }): JSX.Element => {
 
     if (data === undefined) return
     return (
@@ -51,6 +60,7 @@ export const CodeWarsId: FC<CodeWarsProps> = ({ data }) => {
                 <span>{data.leaderboardPosition === null && <p>LeaderBoard Position: null</p>}</span>
                 <span><p>Score: {data.ranks.languages.javascript.score}</p></span>
                 <span><p>Rank: {data.ranks.overall.name}</p></span>
+
             </div>
             {hover && <div className="open-codewars" onMouseLeave={handleHover} onClick={e => { e.preventDefault(); window.open('https://www.codewars.com/users/riectivnoodes') }}>
                 <span title='opens new link in the browser' className='open-codewars-span'><h2>View Codewars Profile</h2></span>
