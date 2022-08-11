@@ -28,7 +28,7 @@ const Header: FunctionComponent<HeaderProps> = ({ onLinkClick, innerWidthProp })
                 activeLink={isActive}
                 theme={''} />
             <NavLinks
-                title={'WEAPONS'}
+                title={'STATS'}
                 innerWidthProp={innerWidthProp}
                 onLinkClick={onLinkClick}
                 setActiveLink={setActive}
@@ -95,7 +95,7 @@ export const NavLinks: FC<NavLinkProps> = ({ innerWidthProp, title, onLinkClick,
                 </span>}
             {activeLink === title && theme !== '' &&
                 <span className={`${theme}-active`} onClick={handleClick}>
-                    <a className='active' >
+                    <a className='' >
                         <h4>{title}</h4>
                     </a>
                     <div id='expand'>
