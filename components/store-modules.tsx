@@ -7,48 +7,50 @@ interface StoreImagePropsOne {
     sourceBottom: string;
     sourceMain: string;
     title: string;
-    description: string; 
+    description: string;
     href: string;
     madeWith: Array<string>;
     onNextPrev: (greater: number, target: string, operator: boolean) => void;
 }
 
-export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, sourceTop, sourceBottom, sourceMid, title, description, href, madeWith }): JSX.Element => {
-    
+export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain, sourceTop, sourceBottom, sourceMid, title, description, href, madeWith }): JSX.Element => {
+
     const [active, setActive] = useState(sourceMain);
     const [hover, setHover] = useState<boolean>()
 
 
-    const handleClick = useCallback((next :boolean) => {
-        next ? onNextPrev(1, 'shopSlider', true) : onNextPrev(0,'shopslider',false)
-    },[onNextPrev] )
-    
+    const handleClick = useCallback((next: boolean) => {
+        next ? onNextPrev(1, 'shopSlider', true) : onNextPrev(0, 'shopslider', false)
+    }, [onNextPrev])
+
     return (
         <>
-            
+
             <div className='store-item'>
-            <span className='slide-selector-container'>
+                <span className='slide-selector-container'>
                     <button id='prev' className='slide-selector' onClick={(e) => { handleClick(false) }}></button>
-                    </span>
+                </span>
 
                 <div className='main-image-overlay'>
-                    <div className='hover-image' onMouseEnter={e => setHover(true)} onMouseLeave={e => setHover(false)}/>
+                    <div className='hover-image' onMouseEnter={e => setHover(true)} onMouseLeave={e => setHover(false)} />
                 </div>
                 {hover && <span className='links-container' onMouseEnter={e => setHover(true)}><h1>VIEW CODE</h1></span>}
                 <div className='images-container' >
                     <div id={`blur-${hover}`} className='image-wrapper'>
-                        
+
                         <Image className='image' src={active} width={1200} height={630} />
                         <div className='built-with-wrapper'>
                             <div className="built-with">
-                            
-                        {madeWith.map((source) => { return (
-                            <Image key={source} src={source} width={70} height={70} />
-                            )})}
-                            </div>
+
+                                {madeWith.map((source) => {
+                                    return (
+                                        <Image key={source} src={source} width={70} height={70} />
+                                    )
+                                })}
                             </div>
                         </div>
-                        
+                    </div>
+
                     <span onMouseLeave={e => setActive(sourceMain)}>
                         <div className='image-wrapper' onMouseEnter={e => setActive(sourceTop)}>
                             <Image className='image' src={sourceTop} width={300} height={200} />
@@ -57,15 +59,15 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                             <Image className='image' src={sourceMid} width={300} height={200} />
                         </div>
                         <div className='image-wrapper' onMouseEnter={e => setActive(sourceBottom)}>
-                        <Image className='image' src={sourceBottom} width={300} height={200} />
+                            <Image className='image' src={sourceBottom} width={300} height={200} />
                         </div>
                     </span>
-                    
+
 
                 </div>
                 <span className="slide-selector-container">
-                        <button id='next' className='slide-selector' onClick={(e) => { handleClick(true) }}></button>
-                    </span>
+                    <button id='next' className='slide-selector' onClick={(e) => { handleClick(true) }}></button>
+                </span>
             </div>
 
             <style jsx>
@@ -101,8 +103,9 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({onNextPrev, sourceMain, 
                     height: 100%;
                     width: 8rem;
                     background-color: rgba(0,0,0,0);
-                    background-image: url('/ui-elements/arrow-one.svg');
+                    background-image: url('/ui-elements/spinner-black.svg');
                     background-repeat: no-repeat;
+                    background-position: center;
                     border: none;
                     opacity: 30%;
                 }
@@ -205,14 +208,14 @@ interface StoreImagePropsTwo {
 }
 
 export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element => {
-    
+
     const [active, setActive] = useState('');
     const [hover, setHover] = useState<boolean>()
 
     return (
         <>
             <div className='store-item' id='main'>
-                {data.map(({image, href}) => {
+                {data.map(({ image, href }) => {
                     return (
                         <span key={image}>
                             {hover && active === image &&
@@ -228,7 +231,7 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
                                 onClick={e => window.open(href)}
                                 onMouseEnter={e => { setHover(true); setActive(image) }}
                                 onMouseLeave={e => setHover(false)}>
-                                
+
                                 <Image
                                     src={image}
                                     width={470}
@@ -294,18 +297,18 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
 }
 
 interface StoreImagePropsThree {
-    
+
 }
 
 export const StoreModuleThree: FC<StoreImagePropsThree> = (): JSX.Element => {
-    
+
     const [active, setActive] = useState('');
     const [hover, setHover] = useState<boolean>()
-    
+
     return (
         <>
             <div className='store-item'>
-              
+
             </div>
 
             <style jsx>
