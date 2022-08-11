@@ -6,20 +6,53 @@ import { isNull, isUndefined } from "../util/isNullUndefiend";
 import Slider from "./slider";
 
 export interface GithubAccountData {
-    login: string;
-    id: number;
-    node_id: string;
-    avatar_url: string;
-    gravatar_id: string;
-    html_url: string;
-    public_repos: number;
-    repos_url: string;
-    message: string;
+    login?: string;
+    id?: string;
+    node_id?: string;
+    avatar_url?: string;
+    html_url?: string;
+    public_repos?: number;
+    repos_url?: string;
+    message?: string;
+    events?: Array<GithubEvents>;
 }
 
 export interface GithubSubscribe {
-    owner: GithubAccountData;
-    repos_url: string;
+    owner?: GithubAccountData;
+    repos_url?: string;
+}
+
+interface Author {
+    email?: string;
+    name?: string;
+    message?: string;
+    url?: string;
+}
+
+interface Actor {
+    id?: number;
+    name?: string;
+    avatar_url?: string;
+}
+
+interface Repo {
+    id?: number;
+    name?: string;
+    url?: string;
+}
+
+interface Payload {
+    size?: number;
+}
+
+export interface GithubEvents {
+    id?: string;
+    type?: string;
+    author?: Author;
+    actor?: Actor;
+    repo?: Repo;
+    payload?: Payload;
+    created_at?: string;
 }
 
 export interface GithubProps {
