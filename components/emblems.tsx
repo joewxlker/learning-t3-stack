@@ -1,10 +1,10 @@
 import Image from "next/image";
-import React, { FC, MouseEvent, useCallback, useEffect, useState } from "react";
-import { Bool } from "../hooks/setBooleanValues";
+import React, { FC, MouseEvent, ReactDOM, useCallback, useEffect, useState } from "react";
+import { emblems } from "../util/staticSiteData";
 
 export interface EmblemMenuProps {
-    bool: Bool;
-    onCloseMenu: (e: any) => void;
+    bool: any;
+    onCloseMenu: (e: MouseEvent) => void;
     onEmblemChange: (value: string) => void;
 }
 
@@ -14,51 +14,6 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
     const [queryEmblem, setQueryEmblem] = useState<string>('')
     const [mousePositionX, setMousePositionX] = useState(0);
     const [mousePositionY, setMousePositionY] = useState(0);
-
-    const source = [
-        '/logos/react.svg',
-        '/logos/node.svg',
-        '/images/expressjs-icon.svg',
-        '/logos/mongo.svg',
-        '/images/SendGrid.svg',
-        '/logos/stripe.svg',
-        '/logos/bootstrap.svg',
-        '/images/Solidity-Logo.wine.svg',
-        '/logos/css.svg',
-        '/logos/html.svg',
-        '/logos/adobei.svg',
-        '/logos/adobep.svg',
-        '/logos/aftere.svg',
-        '/logos/eth.svg',
-        '/logos/heroku.svg',
-        '/logos/typescript.svg',
-        '/logos/javascript.svg',
-        '/logos/npm.svg',
-        '/logos/nextjs.svg',
-
-    ]
-
-    const emblems = [
-        { source: source[0], description: 'REACT', type: 0 },
-        { source: source[1], description: 'NODEJS', type: 1 },
-        { source: source[2], description: 'EXPRESS', type: 1 },
-        { source: source[3], description: 'MONGODB', type: 1 },
-        { source: source[4], description: 'SENDGRID', type: 2 },
-        { source: source[5], description: 'STRIPE', type: 2 },
-        { source: source[6], description: 'BOOTSTRAP', type: 0 },
-        { source: source[7], description: 'SOLIDITY', type: 2 },
-        { source: source[8], description: 'CSS3', type: 0 },
-        { source: source[9], description: 'HTML5', type: 0 },
-        { source: source[10], description: 'ILLUSTRATOR', type: 2 },
-        { source: source[11], description: 'PHOTOSHOP', type: 2 },
-        { source: source[12], description: 'AFTEREFFECTS', type: 2 },
-        { source: source[13], description: 'ETHEREUM', type: 2 },
-        { source: source[14], description: 'HEROKU', type: 1 },
-        { source: source[15], description: 'TYPESCRIPT', type: 1 },
-        { source: source[16], description: 'JAVASCRIPT', type: 0 },
-        { source: source[17], description: 'NPM', type: 2 },
-        { source: source[18], description: 'NEXT', type: 0 },
-    ]
 
     useEffect(() => {
         window.addEventListener('mousemove', (e) => {
