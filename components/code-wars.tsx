@@ -90,7 +90,7 @@ export const CodeWarsId: FC<CodeWarsProps> = ({ data }) => {
             .main{
                 animation: fadein 1s;
                 position:absolute;
-                background-color: rgba(0,0,0, 0.3);
+                background-color: rgba(30,30,30,1);
                 padding: 1rem;
                 // border: solid grey 2px;
                 box-shadow: 0 10px black;
