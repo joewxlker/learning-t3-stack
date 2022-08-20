@@ -6,8 +6,8 @@ import { inferMutationOutput } from "../server/utils/trpc";
 
 interface FormProps {
     type: Array<'firstname' | 'lastname' | 'email' | 'hidden' | 'message'>;
-    target: `sendgrid.send-email`;
-    onResponse: (data?: inferMutationOutput<'sendgrid.send-email'>) => void;
+    target: `send-email`;
+    onResponse: (data?: inferMutationOutput<'send-email'>) => void;
 
 };
 
@@ -16,7 +16,7 @@ export const Form: FC<FormProps> = ({ type, target, onResponse }): JSX.Element =
     const [form, setForm] = useSetForm();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const handleCallback = useCallback((data: inferMutationOutput<'sendgrid.send-email'>) => {
+    const handleCallback = useCallback((data: inferMutationOutput<'send-email'>) => {
         onResponse(data)
         // pass data to parent elements
     }, [onResponse])
@@ -36,7 +36,9 @@ export const Form: FC<FormProps> = ({ type, target, onResponse }): JSX.Element =
             return setLoading(false);
         // returns, no data is sent to server
 
-        const res: any = await client.mutation(target, form);
+        //@ts-ignore
+        const res = await client.mutation(target, form);
+
         //tRPC request
 
         console.log('sending')
