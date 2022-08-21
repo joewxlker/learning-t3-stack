@@ -3,9 +3,9 @@ import Image from 'next/image';
 import { logos } from '../util/staticSiteData';
 import { FC, useEffect, useState } from 'react';
 import { useIncrementData } from '../hooks/setCounter';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const res = await fetch('https://useless-facts.sameerkumar.website/api');
   const data = await res.json();
   return { props: { data: data } }
