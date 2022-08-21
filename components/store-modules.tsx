@@ -13,7 +13,7 @@ interface StoreImagePropsOne {
     onNextPrev: (lesser: number, greater: number, target: string, operator: boolean) => void;
 }
 
-export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain, sourceTop, sourceBottom, sourceMid, title, description, href, madeWith }): JSX.Element => {
+export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain, sourceTop, sourceBottom, sourceMid, href, madeWith }): JSX.Element => {
 
     const [active, setActive] = useState(sourceMain);
     const [hover, setHover] = useState<boolean>()
@@ -41,13 +41,13 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain,
                 {hover && <span className='links-container' onMouseEnter={e => setHover(true)} onClick={e => window.open(href)}><h1>VIEW CODE</h1></span>}
                 <div className='images-container' >
                     <div id={`blur-${hover}`} className='image-wrapper'>
-                        <Image className='image' src={active} width={1200} height={630} />
+                        <Image className='image' alt='' src={active} width={1200} height={630} />
                         <div className='built-with-wrapper'>
                             <div className="built-with">
 
                                 {madeWith.map((source) => {
                                     return (
-                                        <Image key={source} src={source} width={70} height={70} />
+                                        <Image alt='' key={source} src={source} width={70} height={70} />
                                     )
                                 })}
                             </div>
@@ -56,13 +56,13 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain,
 
                     <span onMouseLeave={e => setActive(sourceMain)}>
                         <div className='image-wrapper' onMouseEnter={e => setActive(sourceTop)}>
-                            <Image className='image' src={sourceTop} width={300} height={200} />
+                            <Image className='image' alt='' src={sourceTop} width={300} height={200} />
                         </div>
                         <div className='image-wrapper' onMouseEnter={e => setActive(sourceMid)}>
-                            <Image className='image' src={sourceMid} width={300} height={200} />
+                            <Image className='image' alt='' src={sourceMid} width={300} height={200} />
                         </div>
                         <div className='image-wrapper' onMouseEnter={e => setActive(sourceBottom)}>
-                            <Image className='image' src={sourceBottom} width={300} height={200} />
+                            <Image className='image' alt='' src={sourceBottom} width={300} height={200} />
                         </div>
                     </span>
                 </div>
@@ -240,6 +240,7 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
                                 onMouseLeave={e => setHover(false)}>
 
                                 <Image
+                                    alt=''
                                     src={image}
                                     width={470}
                                     height={300} />

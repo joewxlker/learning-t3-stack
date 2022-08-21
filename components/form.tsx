@@ -68,7 +68,7 @@ export const Form: FC<FormProps> = ({ type, target, onResponse }): JSX.Element =
                 </>
                 {!loading && <button type='submit' disabled={((type.length - 1)) != Object.entries(form).length}> Submit </button>}
                 {loading && <div className='spinner'>
-                    <Image src='/ui-elements/spinner-orange.svg' width={50} height={50} />
+                    <Image alt='loading' src='/ui-elements/spinner-orange.svg' width={50} height={50} />
                 </div>}
             </form>
             <style jsx > {`

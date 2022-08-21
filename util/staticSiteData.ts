@@ -1,20 +1,13 @@
 
-interface StoreOneObj {
-    sourceMain: string;
-    sourceBottom: string;
-    sourceMid: string;
-    sourceTop: string;
-    title: string;
-    description: string;
-    href: string;
-    madeWith: Array<string>;
-}
-
-export const storeOneArr: Array<StoreOneObj> = [{
+export const storeOneArr = [{
     sourceMain: '/images/beautyshop-main.png',
+    altMain: '',
     sourceBottom: '/images/beautyshop-one.png',
+    altBottom: '',
     sourceMid: '/images/beautyshop-two.png',
+    altMid: '',
     sourceTop: '/images/beautyshop-three.png',
+    altTop: '',
     title: '',
     description: ``,
     href: 'https://github.com/riectivnoodes',
@@ -28,9 +21,13 @@ export const storeOneArr: Array<StoreOneObj> = [{
     ]
 }, {
     sourceMain: '/images/react-portfolio-four.png',
+    altMain: '',
     sourceBottom: '/images/react-portfolio.png',
+    altBottom: '',
     sourceMid: '/images/react-portfolio-two.png',
+    altMid: '',
     sourceTop: '/images/react-portfolio-three.png',
+    altTop: '',
     title: '',
     description: ``,
     href: 'https://github.com/riectivnoodes',
@@ -41,9 +38,13 @@ export const storeOneArr: Array<StoreOneObj> = [{
     ]
 }, {
     sourceMain: '/images/retralink.png',
+    altMain: '',
     sourceBottom: '/images/retralink-four.png',
+    altBottom: '',
     sourceMid: '/images/retralink-two.png',
+    altMid: '',
     sourceTop: '/images/retralink-three.png',
+    altTop: '',
     title: '',
     description: ``,
     href: 'https://github.com/riectivnoodes',
@@ -55,14 +56,15 @@ export const storeOneArr: Array<StoreOneObj> = [{
     ]
 }]
 
-export const storeTwoArr = [{ image: '/images/react-portfolio-four.png', href: 'https://josephwalker.app', },
-{ image: '/images/retralink-four.png', href: 'https://voluble-melomakarona-9c605a.netlify.app/' },
-{ image: '/images/beautyshop-main.png', href: '' }]
+export const storeTwoArr = [{ image: '/images/react-portfolio-four.png', href: 'https://josephwalker.app', alt: '', },
+{ image: '/images/retralink-four.png', href: 'https://voluble-melomakarona-9c605a.netlify.app/', alt: '', },
+{ image: '/images/beautyshop-main.png', href: '', alt: '', }]
 
 export const buttons = [{
     subName: '',
     name: 'GITHUB',
     href: 'https://github.com/riectivnoodes',
+    alt: '',
     source: '/images/github-dashboard.png',
     metadata: '',
     icon: '/logos/github.svg'
@@ -70,6 +72,7 @@ export const buttons = [{
     subName: '',
     name: 'LINKEDIN',
     href: 'https://www.linkedin.com/in/joe-walker-89312a22a/',
+    alt: '',
     source: '/images/linkedin-dashboard.png',
     metadata: '',
     icon: '/logos/linkedin.svg'
@@ -78,6 +81,7 @@ export const buttons = [{
     name: 'RESUME',
     source: '/images/resume-dashboard.png',
     href: '',
+    alt: '',
     metadata: '',
     icon: '/logos/download.svg'
 }]

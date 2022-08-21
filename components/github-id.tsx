@@ -94,7 +94,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
 
     const openEmblemMenu = useCallback(async () => {
         return onOpenEmblemMenu('openEmblemMenu');
-    }, [])
+    }, [onOpenEmblemMenu])
 
     const getCommitData = async (data: object | null | undefined, subs: object | null | undefined) => {
 
@@ -127,7 +127,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
 
                 <span className='main-span' >
                     <div id={`${bool['hover']}`} className='emblem-container'>
-                        <Image src={`${activeEmblem}`} height={100} width={110} onMouseOver={e => setBool('hover')} />
+                        <Image alt={activeEmblem} src={`${activeEmblem}`} height={100} width={110} onMouseOver={e => setBool('hover')} />
                     </div>
                     {/* ^ emblem button */}
 
@@ -159,7 +159,7 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
                 {loading && !bool['githubData'] &&
                     <>
                         <div className='spinner'>
-                            <Image src='/ui-elements/spinner-orange.svg' width={50} height={50} />
+                            <Image alt='loading' src='/ui-elements/spinner-orange.svg' width={50} height={50} />
                         </div>
                         <h4 id='spinner-text'>Github Pending...</h4>
                     </>}

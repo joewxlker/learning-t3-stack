@@ -100,7 +100,7 @@ export const StatModules: FC<StatModulesProps> = ({ data, active }): JSX.Element
                             {statData[active] !== null && <>{statData[active].images.map((data: any) => {
                                 return (
                                     <div className='' key={data} style={{ width: '80%' }}>
-                                        <div className='flex-row'><Image src={data.url} width={40} height={40} /><h3 id='dark'>{data.title}</h3> <h1 id='dark'>{data.completion}</h1></div>
+                                        <div className='flex-row'><Image alt={data.title} src={data.url} width={40} height={40} /><h3 id='dark'>{data.title}</h3> <h1 id='dark'>{data.completion}</h1></div>
                                         <Slider length={data.completion} />
                                     </div>
                                 )
@@ -112,7 +112,7 @@ export const StatModules: FC<StatModulesProps> = ({ data, active }): JSX.Element
                         <div className='flex-row' style={{ flexWrap: 'wrap' }}>
                             {statData[active] !== null && <>{statData[active].acheivements.map((image: string) => {
                                 return (
-                                    <div key={image} style={{ padding: '1%' }}><Image src={image} width={60} height={60} /></div>
+                                    <div key={image} style={{ padding: '1%' }}><Image alt={image} src={image} width={60} height={60} /></div>
                                 )
                             })}</>}
                         </div>

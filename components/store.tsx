@@ -8,9 +8,6 @@ export const Store: FC = (): JSX.Element => {
     const [count, setCounter, setIncrement] = useIncrementData();
 
     useEffect(() => {
-        console.log(count, setCounter, setIncrement)
-    })
-    useEffect(() => {
         const interval = setInterval(() => {
             setIncrement(null, 2, 'shopSlider', true)
         }, 8000)

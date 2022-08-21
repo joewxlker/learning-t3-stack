@@ -50,7 +50,7 @@ export const MainMenu: FC = () => {
                                      * the wrapper allows this to have any size while 
                                      * still positioned relatively and wihtout 
                                      * effecting the flow of the page */}
-                                    <span><Image src={data.icon} width={50} height={50} /><h2>{data.name}</h2></span>
+                                    <span><Image alt={data.name} src={data.icon} width={50} height={50} /><h2>{data.name}</h2></span>
                                 </div>}
                             </div>
                         </button>

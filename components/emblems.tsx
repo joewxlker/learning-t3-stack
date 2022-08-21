@@ -47,7 +47,7 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
                             return (
                                 <>
                                     {emblemType === type && <button className='emblem-button' title='clicking this changes your emblem' onClick={e => { changeEmblem(source); closeMenu(e) }}>
-                                        <Image src={source} height={100} width={100} onMouseEnter={e => setQueryEmblem(description)} onMouseLeave={e => setQueryEmblem('')} />
+                                        <Image src={source} alt={description} height={100} width={100} onMouseEnter={e => setQueryEmblem(description)} onMouseLeave={e => setQueryEmblem('')} />
                                     </button>}
                                 </>
                             )
