@@ -10,7 +10,7 @@ interface StoreImagePropsOne {
     description: string;
     href: string;
     madeWith: Array<string>;
-    onNextPrev: (greater: number, target: string, operator: boolean) => void;
+    onNextPrev: (lesser: number, greater: number, target: string, operator: boolean) => void;
 }
 
 export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain, sourceTop, sourceBottom, sourceMid, title, description, href, madeWith }): JSX.Element => {
@@ -18,26 +18,29 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain,
     const [active, setActive] = useState(sourceMain);
     const [hover, setHover] = useState<boolean>()
 
+    useEffect(() => {
+        setActive(sourceMain)
+    }, [sourceMain])
+
 
     const handleClick = useCallback((next: boolean) => {
-        next ? onNextPrev(1, 'shopSlider', true) : onNextPrev(0, 'shopslider', false)
+        next ? onNextPrev(null, 2, 'shopSlider', true) : onNextPrev(2, 0, 'shopSlider', false)
     }, [onNextPrev])
 
     return (
         <>
 
-            <div className='store-item'>
+            <div key={sourceMain} className='store-item'>
                 <span className='slide-selector-container'>
                     <button id='prev' className='slide-selector' onClick={(e) => { handleClick(false) }}></button>
                 </span>
 
                 <div className='main-image-overlay'>
-                    <div className='hover-image' onMouseEnter={e => setHover(true)} onMouseLeave={e => setHover(false)} />
+                    <div className='hover-image' onMouseEnter={e => setHover(true)} onMouseLeave={e => setHover(false)} onClick={e => window.open(href)} />
                 </div>
-                {hover && <span className='links-container' onMouseEnter={e => setHover(true)}><h1>VIEW CODE</h1></span>}
+                {hover && <span className='links-container' onMouseEnter={e => setHover(true)} onClick={e => window.open(href)}><h1>VIEW CODE</h1></span>}
                 <div className='images-container' >
                     <div id={`blur-${hover}`} className='image-wrapper'>
-
                         <Image className='image' src={active} width={1200} height={630} />
                         <div className='built-with-wrapper'>
                             <div className="built-with">
@@ -62,8 +65,6 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain,
                             <Image className='image' src={sourceBottom} width={300} height={200} />
                         </div>
                     </span>
-
-
                 </div>
                 <span className="slide-selector-container">
                     <button id='next' className='slide-selector' onClick={(e) => { handleClick(true) }}></button>
@@ -96,14 +97,10 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain,
                         justify-content:center;
                         align-items: center;
                 }
-                #prev{
-                    transform: scaleX(-100%);
-                }
                 .slide-selector{
                     height: 100%;
                     width: 8rem;
                     background-color: rgba(0,0,0,0);
-                    background-image: url('/ui-elements/spinner-black.svg');
                     background-repeat: no-repeat;
                     background-position: center;
                     border: none;
@@ -112,6 +109,8 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain,
                 .slide-selector:hover{
                     opacity: 100%;
                     cursor: pointer;
+                    transform: rotate(180deg);
+                    animation: rotate180 0.5s;
                 }
 
                 #blur-true{
@@ -192,6 +191,12 @@ export const StoreModuleOne: FC<StoreImagePropsOne> = ({ onNextPrev, sourceMain,
                             display: flex;
                             flex-direction: row;
                             margin-bottom: 4rem;
+                            animation: fadein 1s;
+                        }
+
+                        @keyframes rotate180 {
+                            from { transform: rotate(0deg)}
+                            to { transform: rotate(180deg)}
                         }
                         `}
             </style>
@@ -219,13 +224,15 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
                     return (
                         <span key={image}>
                             {hover && active === image &&
-                                <div className={`links-wrapper`} onClick={e => window.open(href)}>
+                                <button disabled={href === ''} className={`links-wrapper`} onClick={e => window.open(href)}>
                                     <div className={`links-container`} onMouseEnter={e => { setHover(true); setActive(image) }}>
                                         <h2>View Project</h2>
                                     </div>
-                                </div>}
+                                </button>}
 
-                            <div
+                            <button
+                                title='This app has not yet been deployed'
+                                disabled={href === ''}
                                 id={active === image ? `blur-${hover}` : ''}
                                 className='image-wrapper'
                                 onClick={e => window.open(href)}
@@ -236,7 +243,7 @@ export const StoreModuleTwo: FC<StoreImagePropsTwo> = ({ data }): JSX.Element =>
                                     src={image}
                                     width={470}
                                     height={300} />
-                            </div>
+                            </button>
                         </span >
                     );
                 })}
