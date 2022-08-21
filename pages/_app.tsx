@@ -8,7 +8,6 @@ import { createTRPCClient } from "@trpc/client";
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
   return <Component {...pageProps} />
-  // using next-auth session
 };
 
 const getBaseUrl = () => {

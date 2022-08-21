@@ -36,7 +36,7 @@ export const Form: FC<FormProps> = ({ type, target, onResponse }): JSX.Element =
             return setLoading(false);
         // returns, no data is sent to server
 
-        //@ts-ignore
+        // @ts-ignore
         const res = await client.mutation(target, form);
 
         //tRPC request
