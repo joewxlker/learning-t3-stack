@@ -56,7 +56,7 @@ export interface GithubEvents {
 }
 
 export interface GithubProps {
-    onOpenEmblemMenu: (e: string) => Dispatch<SetStateAction<object>>;
+    onOpenEmblemMenu: (e: string) => void;
     githubAccountData: GithubAccountData | null;
     githubSubscribe: GithubSubscribe | null;
     activeEmblem: string;
@@ -82,11 +82,11 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
     useEffect(() => {
         const interval = setInterval(() => {
             if (!isNull(githubAccountData)) return;
-            setIncrement((githubAccountData.public_repos - 1), 'iterateRepoValues', true);
+            setIncrement(null, (githubAccountData.public_repos - 1), 'iterateRepoValues', true);
             setTimeout(() => {
                 getCommitData(githubAccountData, githubSubscribe);
             }, 100)
-            setIncrement(2, 'iteratePValues', true);
+            setIncrement(null, 2, 'iteratePValues', true);
         }, 8000)
         return () => clearInterval(interval)
     }, [count, setCount])
@@ -334,8 +334,8 @@ export const IdCard: FC<GithubProps> = ({ githubAccountData, githubSubscribe, on
             top: 9rem;
             right: 2rem;
             border: none;
-                    box-shadow: 0 0 4rem 3rem rgba(0,0,0,0.7);
-                    background-color: rgba(0,0,0,0.65);
+                    box-shadow: 0 0 4rem 3rem rgba(0,0,0,0.3);
+                    background-color: rgba(0,0,0,0.2);
         }
 
         @keyframes reveal {
