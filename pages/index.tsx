@@ -63,9 +63,9 @@ export const Home: FC<IndexProps> = (props): JSX.Element => {
 
           {/** Components */}
           <div className='main'>
-            <h1>WELCOME TO JOSEPH WALKER'S PORTFOLIO</h1>
+            <h1>WELCOME TO JOSEPH&apos;S PORTFOLIO</h1>
             <h2></h2>
-            <div className='logo-wrapper'><Image src={logos[count['index-logo']]} width={50} height={50} /></div>
+            <div className='logo-wrapper'><Image alt={logos[count['index-logo']]} src={logos[count['index-logo']]} width={50} height={50} /></div>
           </div>
           <div className='bottom-span'>
             <div className='spinner'><Image src='/ui-elements/spinner-blue.svg' width={50} height={50} /></div>

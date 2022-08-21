@@ -69,7 +69,7 @@ export const MainMenu: FC = () => {
                         <h1>Contact Me</h1>
                         {!confirmation && <Form type={['firstname', 'lastname', 'email', 'hidden', 'message']} target={'send-email'} onResponse={e => { console.log(confirmation); setConfirmation(true) }} ></Form>}
                         {confirmation && <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                            <h2>Thank you for contacting me, I'll be in touch asap</h2>
+                            <h2>Thank you for contacting me, I&apos;ll be in touch asap</h2>
                             <button onClick={e => { setMenuBool(!menuBool); setConfirmation(false) }}>Return to app</button>
                         </div>}
 

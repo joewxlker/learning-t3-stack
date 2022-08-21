@@ -60,7 +60,7 @@ export const StatModules: FC<StatModulesProps> = ({ data, active }): JSX.Element
 
         setStatData([github, codewars, sololearn])
         if (data[0] === null) return setStatData([null, codewars, sololearn])
-    }, [])
+    }, [data])
 
     const [big, setBig] = useState<number | undefined>();
     const [medium, setMedium] = useState<number | undefined>();
@@ -75,7 +75,7 @@ export const StatModules: FC<StatModulesProps> = ({ data, active }): JSX.Element
         setBig(commits.filter(x => x > 10).length)
         setMedium(commits.filter(x => x > 5).length)
         setSmall(commits.filter(x => x > 1).length);
-    })
+    }, [])
 
     if (statData[0] === undefined) return
     return (
@@ -85,9 +85,9 @@ export const StatModules: FC<StatModulesProps> = ({ data, active }): JSX.Element
                 <div className='module-container'>
                     <div className='avatar'>
                         <div style={{ clipPath: ' circle(70px at center)', display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
-                            <Image src={statData[active].avatar} width={140} height={140} />
+                            <Image alt='' src={statData[active].avatar} width={140} height={140} />
                         </div>
-                        {active === 1 && <Image src={statData[active].badge} width={40} height={40} />}
+                        {active === 1 && <Image alt='' src={statData[active].badge} width={40} height={40} />}
                         <div className='flex-column'>
                             <h1 id='dark'>{statData[active].title}</h1>
                             <h1 id='dark'>{statData[active].username}</h1>
@@ -339,13 +339,13 @@ export const Stats: FC<StatsProps> = ({ data }): JSX.Element => {
     useEffect(() => {
         if (data[0] !== null) return
         setActive(1)
-    }, [])
+    }, [data])
 
     return (
         <>
             <div className='Stats'>
                 <div className='sidebar'>
-                    <span className='logo'><Image src='/ui-elements/spinner-black.svg' height={60} width={60} /></span>
+                    <span className='logo'><Image alt='' src='/ui-elements/spinner-black.svg' height={60} width={60} /></span>
                     {data[0] !== null && <button onClick={e => { setActive(0) }}><span id='github' className={`flex-row  ${active === 0}`}></span></button>}
                     <button onClick={e => { setActive(1) }}><span id='codewars' className={`flex-row  ${active === 1}`}></span></button>
                     <button onClick={e => { setActive(2); }}><span id='sololearn' className={`flex-row  ${active === 2}`}></span></button>

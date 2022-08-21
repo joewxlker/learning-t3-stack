@@ -71,7 +71,7 @@ export const NavLinks: FC<NavLinkProps> = ({ innerWidthProp, title, onLinkClick,
     const handleClick = useCallback(() => {
         onLinkClick(innerWidthProp, title);
         setActiveLink(title);
-    }, [onLinkClick])
+    }, [onLinkClick, innerWidthProp, setActiveLink, title])
 
     return (
         <>
@@ -81,7 +81,7 @@ export const NavLinks: FC<NavLinkProps> = ({ innerWidthProp, title, onLinkClick,
                         <h4>{title}</h4>
                     </a>
                     <div id='expand'>
-                        <Image src='/ui-elements/spinner-orange.svg' width={20} height={20} />
+                        <Image alt='' src='/ui-elements/spinner-orange.svg' width={20} height={20} />
                     </div>
                 </span>}
             {activeLink !== title && theme === '' &&
@@ -90,7 +90,7 @@ export const NavLinks: FC<NavLinkProps> = ({ innerWidthProp, title, onLinkClick,
                         <h4>{title}</h4>
                     </a>
                     <div id='expand'>
-                        <Image src='/ui-elements/spinner-black.svg' width={20} height={20} />
+                        <Image alt='' src='/ui-elements/spinner-black.svg' width={20} height={20} />
                     </div>
                 </span>}
             {activeLink === title && theme !== '' &&
@@ -99,7 +99,7 @@ export const NavLinks: FC<NavLinkProps> = ({ innerWidthProp, title, onLinkClick,
                         <h4>{title}</h4>
                     </a>
                     <div id='expand'>
-                        <Image src='/ui-elements/spinner-blue.svg' width={20} height={20} />
+                        <Image alt='' src='/ui-elements/spinner-blue.svg' width={20} height={20} />
                     </div>
                 </span>}
             {activeLink !== title && theme !== '' &&
@@ -108,7 +108,7 @@ export const NavLinks: FC<NavLinkProps> = ({ innerWidthProp, title, onLinkClick,
                         <h4>{title}</h4>
                     </a>
                     <div id='expand'>
-                        <Image src='/ui-elements/spinner-blue.svg' width={20} height={20} />
+                        <Image alt='' src='/ui-elements/spinner-blue.svg' width={20} height={20} />
                     </div>
                 </span>}
             <style jsx>{`

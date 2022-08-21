@@ -74,7 +74,7 @@ const Mobile: NextPage<MobileProps> = ({ githubAccountData }) => {
                         <div className='github-id'>
                             <span className='main-span' >
                                 <div className='emblem-container'>
-                                    <Image src={`/logos/node.svg`} height={100} width={110} />
+                                    <Image alt='' src={`/logos/node.svg`} height={100} width={110} />
                                 </div>
                                 {/* ^ emblem button */}
 
@@ -95,7 +95,7 @@ const Mobile: NextPage<MobileProps> = ({ githubAccountData }) => {
                     </div>
                 </div>
             </div>
-            <div className='cyborg-image-wrapper'><Image src='/images/cyborg-mobile.jpeg' width={900} height={2000} objectFit='cover' /></div>
+            <div className='cyborg-image-wrapper'><Image alt='background' src='/images/cyborg-mobile.jpeg' width={900} height={2000} objectFit='cover' /></div>
             <div className='overlay'></div>
             <style jsx >
                 {`
@@ -251,7 +251,7 @@ export const MainMenu: FC = () => {
                         <h1>Contact Me</h1>
                         {!confirmation && <Form type={['firstname', 'lastname', 'email', 'hidden', 'message']} target={'send-email'} onResponse={e => { console.log(confirmation); setConfirmation(true) }} ></Form>}
                         {confirmation && <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                            <h2>Thank you for contacting me, I'll be in touch asap</h2>
+                            <h2>Thank you for contacting me, I&rsquo;ll be in touch asap</h2>
                             <button onClick={e => { setMenuBool(!menuBool); setConfirmation(false) }}>Return to app</button>
                         </div>}
                     </div>
@@ -411,19 +411,19 @@ export const Store: FC = (): JSX.Element => {
             <div ref={CONTAINER} className='store'>
                 <div className='store-wrapper'>
                     <div ref={KLEANSE} className='module-one module'>
-                        <Image src={storeOneArr[0].sourceMain} width={450} height={300} />
-                        <Image src={storeOneArr[0].sourceBottom} width={450} height={300} />
-                        <Image src={storeOneArr[0].sourceTop} width={450} height={300} />
+                        <Image alt='' src={storeOneArr[0].sourceMain} width={450} height={300} />
+                        <Image alt='' src={storeOneArr[0].sourceBottom} width={450} height={300} />
+                        <Image alt='' src={storeOneArr[0].sourceTop} width={450} height={300} />
                     </div>
                     <div ref={PORTFOLIO} className='module-two module'>
-                        <Image src={storeOneArr[1].sourceMain} width={450} height={300} />
-                        <Image src={storeOneArr[1].sourceBottom} width={450} height={300} />
-                        <Image src={storeOneArr[1].sourceTop} width={450} height={300} />
+                        <Image alt='' src={storeOneArr[1].sourceMain} width={450} height={300} />
+                        <Image alt='' src={storeOneArr[1].sourceBottom} width={450} height={300} />
+                        <Image alt='' src={storeOneArr[1].sourceTop} width={450} height={300} />
                     </div>
                     <div ref={RETRALINK} className='module-three module'>
-                        <Image src={storeOneArr[2].sourceMain} width={450} height={300} />
-                        <Image src={storeOneArr[2].sourceBottom} width={450} height={300} />
-                        <Image src={storeOneArr[2].sourceTop} width={450} height={300} />
+                        <Image alt='' src={storeOneArr[2].sourceMain} width={450} height={300} />
+                        <Image alt='' src={storeOneArr[2].sourceBottom} width={450} height={300} />
+                        <Image alt='' src={storeOneArr[2].sourceTop} width={450} height={300} />
                     </div>
                 </div>
                 <div>

@@ -24,11 +24,11 @@ const EmblemMenu: FC<EmblemMenuProps> = ({ bool, onCloseMenu, onEmblemChange }) 
 
     const closeMenu = useCallback((e: MouseEvent) => {
         onCloseMenu(e);
-    }, [])
+    }, [onCloseMenu])
 
     const changeEmblem = useCallback((value: string) => {
         onEmblemChange(value);
-    }, [])
+    }, [onEmblemChange])
 
     return (
         <>

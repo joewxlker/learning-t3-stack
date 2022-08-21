@@ -13,7 +13,7 @@ export const Settings: FC<SettingsProps> = ({ onSliderChange }): JSX.Element => 
 
     useEffect(() => {
         setWidth(window.innerWidth)
-    })
+    }, [width, setWidth])
 
     const elementData = [{
         title: 'graphics',
@@ -27,7 +27,7 @@ export const Settings: FC<SettingsProps> = ({ onSliderChange }): JSX.Element => 
 
     const setSlidersCallback = useCallback((type: string) => {
         onSliderChange(type, `${xpos[type]}`)
-    }, [xpos, setXpos, onSliderChange])
+    }, [xpos, onSliderChange])
 
     return (
         <>
@@ -36,14 +36,14 @@ export const Settings: FC<SettingsProps> = ({ onSliderChange }): JSX.Element => 
                     {elementData.map((data) => {
                         // renders list containers into columns
                         return (
-                            <div style={{ width: `${width / 4}%` }}>
+                            <div key={data.title} style={{ width: `${width / 4}%` }}>
                                 {/* width refers to inner screen width */}
                                 <h1>{data.title}</h1>
                                 <ul>
                                     {data.slider !== undefined && data.slider.map((listData) => {
                                         // renders listed sliders if defined
                                         return (
-                                            <li className='list-item'>
+                                            <li key={listData.title} className='list-item'>
                                                 <h3>{listData.title}</h3>
                                                 <Slider length={listData.sliderPos} />
                                                 {/* slider component, renders plain slider without button to control length */}
@@ -74,7 +74,7 @@ export const Settings: FC<SettingsProps> = ({ onSliderChange }): JSX.Element => 
                                     {data.boxes.map((listData) => {
                                         // renders checkboxes  
                                         return (
-                                            <li className='list-item'>
+                                            <li key={listData.text} className='list-item'>
                                                 {listData.text}
                                             </li>
                                         )
